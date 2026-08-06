@@ -1,332 +1,903 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KampusFind - Lost & Found & Nebeng Kampus</title>
-  <!-- Tailwind CSS CDN -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KampusFind — Lost & Found + Nebeng Kampus</title>
+
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #0b132b;
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'] },
+          colors: {
+            deep: '#0b132b',
+            panel: '#1c2541',
+            panel2: '#243b55',
+            cyanx: '#00d4ff',
+            emx: '#34d399',
+          }
+        }
+      }
     }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       KampusFind — Global Styles
+       ============================================================ */
+    html, body { height: 100%; }
+    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: #0b132b; }
+
+    .glass {
+      background: linear-gradient(180deg, rgba(28,37,65,.92), rgba(28,37,65,.78));
+      border: 1px solid rgba(148,163,184,.14);
+      backdrop-filter: blur(12px);
+    }
+    .glow-cyan { box-shadow: 0 0 0 1px rgba(0,212,255,.15), 0 10px 40px rgba(0,212,255,.08); }
+    .glow-em { box-shadow: 0 0 0 1px rgba(52,211,153,.15), 0 10px 40px rgba(52,211,153,.08); }
+
+    .input-dark {
+      background: rgba(11,19,43,.65);
+      border: 1px solid rgba(148,163,184,.18);
+    }
+    .input-dark:focus {
+      outline: none;
+      border-color: rgba(0,212,255,.55);
+      box-shadow: 0 0 0 3px rgba(0,212,255,.12);
+    }
+
+    .tab-active {
+      background: linear-gradient(135deg, rgba(0,212,255,.18), rgba(52,211,153,.12));
+      border-color: rgba(0,212,255,.35);
+      color: #e2e8f0;
+    }
+
+    .badge-lost { background: rgba(248,113,113,.15); color: #fca5a5; border: 1px solid rgba(248,113,113,.25); }
+    .badge-found { background: rgba(52,211,153,.15); color: #6ee7b7; border: 1px solid rgba(52,211,153,.25); }
+    .badge-nebeng { background: rgba(0,212,255,.12); color: #67e8f9; border: 1px solid rgba(0,212,255,.25); }
+
+    .scroll-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+    .scroll-thin::-webkit-scrollbar-thumb { background: rgba(148,163,184,.25); border-radius: 999px; }
+
+    .fade-in { animation: fadeIn .35s ease both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    .hidden-strict { display: none !important; }
   </style>
 </head>
-<body class="text-slate-100 min-h-screen pb-12">
+<body class="h-full text-slate-200 antialiased">
+  <!-- ===================== AUTH GATE ===================== -->
+  <div id="auth-screen" class="min-h-full flex items-center justify-center p-4 relative overflow-hidden">
+    <div class="pointer-events-none absolute inset-0">
+      <div class="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-cyan-400/10 blur-3xl"></div>
+      <div class="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-emerald-400/10 blur-3xl"></div>
+    </div>
 
-  <!-- Header / Navbar -->
-  <header class="bg-slate-900/80 backdrop-blur border-b border-slate-800 sticky top-0 z-50">
-    <div class="max-w-4xl mx-auto px-4 py-4 flex flex-wrap justify-between items-center gap-3">
-      <div class="flex items-center gap-2">
-        <span class="text-2xl">🎓</span>
-        <div>
-          <h1 class="text-xl font-extrabold text-cyan-400 tracking-wide">KampusFind</h1>
-          <p class="text-[11px] text-slate-400">Hub Lost & Found + Nebeng Kampus UTDI</p>
+    <div class="w-full max-w-md glass rounded-3xl p-6 sm:p-8 glow-cyan relative z-10 fade-in">
+      <div class="text-center mb-7">
+        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-400/20 to-emerald-400/20 border border-cyan-300/20 mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-cyan-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.5 12.5l2.2 2.2L15.8 9.6" />
+          </svg>
         </div>
-      </div>
-      <button id="openModalBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm transition active:scale-95 flex items-center gap-1.5 shadow-lg shadow-cyan-500/20">
-        <span>➕</span> Buat Posting Baru
-      </button>
-    </div>
-  </header>
-
-  <!-- Main Container -->
-  <main class="max-w-4xl mx-auto px-4 mt-6 space-y-6">
-
-    <!-- Tab Navigation -->
-    <div class="flex bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 text-sm font-semibold">
-      <button id="tabLostFound" class="tab-btn flex-1 py-2.5 rounded-xl text-center transition bg-cyan-500 text-slate-950 font-bold shadow">
-        🔍 Lost & Found (Barang Hilang)
-      </button>
-      <button id="tabNebeng" class="tab-btn flex-1 py-2.5 rounded-xl text-center transition text-slate-400 hover:text-white">
-        🚗 Board Nebeng Kampus
-      </button>
-    </div>
-
-    <!-- Search & Filter Bar -->
-    <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800 flex flex-col md:flex-row gap-3">
-      <div class="flex-1 relative">
-        <input type="text" id="searchInput" placeholder="Cari nama barang, lokasi, atau rute nebeng..." 
-          class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500 pl-10">
-        <span class="absolute left-3.5 top-3 text-slate-500 text-sm">🔎</span>
-      </div>
-      <select id="filterCategory" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
-        <option value="semua">Semua Kategori</option>
-        <option value="hilang">🔴 Barang Hilang</option>
-        <option value="ditemukan">🟢 Barang Ditemukan</option>
-        <option value="nebeng_tebangan">🚗 Beri Tebangan</option>
-        <option value="nebeng_cari">🙋‍♂️ Cari Tebangan</option>
-      </select>
-    </div>
-
-    <!-- Container Kartu Postingan -->
-    <div id="postsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <!-- Item postingan dimuat via JS -->
-    </div>
-
-  </main>
-
-  <!-- MODAL FORM INPUT POSTINGAN -->
-  <div id="modalForm" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl relative">
-      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-        <h3 class="font-bold text-lg text-cyan-400">Buat Posting Baru</h3>
-        <button id="closeModalBtn" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
+        <h1 class="text-2xl font-extrabold tracking-tight text-white">KampusFind</h1>
+        <p class="text-sm text-slate-400 mt-1">Lost & Found + Board Nebeng kampus</p>
       </div>
 
-      <form id="postForm" class="space-y-3">
+      <!-- LOGIN FORM -->
+      <form id="login-form" class="space-y-4">
         <div>
-          <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Tipe Posting</label>
-          <select id="postType" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:border-cyan-500">
-            <option value="hilang">🔴 Lost & Found: Barang Hilang</option>
-            <option value="ditemukan">🟢 Lost & Found: Barang Ditemukan</option>
-            <option value="nebeng_tebangan">🚗 Nebeng: Ada Lapak Tebangan Motor/Mobil</option>
-            <option value="nebeng_cari">🙋‍♂️ Nebeng: Butuh Tebangan / Boncengan</option>
-          </select>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Email</label>
+          <input id="login-email" type="email" required placeholder="nama@kampus.ac.id" class="input-dark w-full rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-500" />
         </div>
-
         <div>
-          <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Judul / Nama Barang / Rute</label>
-          <input type="text" id="postTitle" required placeholder="Cth: KTM atas nama Budi / Nebeng ke Janti" 
-            class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:border-cyan-500">
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Password</label>
+          <input id="login-password" type="password" required minlength="6" placeholder="Gunakan NIM" class="input-dark w-full rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-500" />
         </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Lokasi / Titik Kumpul</label>
-          <input type="text" id="postLocation" required placeholder="Cth: Perpustakaan Lantai 2 / Depan Gerbang Utama" 
-            class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:border-cyan-500">
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Deskripsi Ringkas</label>
-          <textarea id="postDesc" rows="2" required placeholder="Cth: Kunci motor Honda gantungan dompet hitam. Ditemukan jam 10 pagi." 
-            class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:border-cyan-500"></textarea>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Nomor WhatsApp (Aktif)</label>
-          <input type="text" id="postWa" required placeholder="Cth: 081234567890" 
-            class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:border-cyan-500">
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">URL Foto (Opsional)</label>
-          <input type="url" id="postImg" placeholder="https://... (Biarkan kosong jika tidak ada foto)" 
-            class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:border-cyan-500">
-        </div>
-
-        <button type="submit" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg">
-          🚀 Terbitkan Posting
+        <button type="submit" id="login-btn" class="w-full rounded-xl py-3 text-sm font-bold text-deep bg-gradient-to-r from-cyan-300 to-emerald-300 hover:opacity-95 transition active:scale-[.99]">
+          Masuk
         </button>
+        <p class="text-center text-sm text-slate-400 pt-1">
+          Belum punya akun?
+          <button type="button" id="to-register" class="text-cyan-300 font-semibold hover:underline">Daftar</button>
+        </p>
       </form>
+
+      <!-- REGISTER FORM -->
+      <form id="register-form" class="space-y-4 hidden">
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Nama Lengkap</label>
+          <input id="reg-name" type="text" required placeholder="Nama lengkap" class="input-dark w-full rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-500" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">NIM / Email Kampus</label>
+          <input id="reg-email" type="email" required placeholder="nim@kampus.ac.id" class="input-dark w-full rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-500" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Password</label>
+          <input id="reg-password" type="password" required minlength="6" placeholder="Minimal 6 karakter" class="input-dark w-full rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-500" />
+        </div>
+        <button type="submit" id="register-btn" class="w-full rounded-xl py-3 text-sm font-bold text-deep bg-gradient-to-r from-emerald-300 to-cyan-300 hover:opacity-95 transition active:scale-[.99]">
+          Buat Akun
+        </button>
+        <p class="text-center text-sm text-slate-400 pt-1">
+          Sudah punya akun?
+          <button type="button" id="to-login" class="text-emerald-300 font-semibold hover:underline">Login</button>
+        </p>
+      </form>
+
+      <div id="auth-error" class="hidden mt-4 text-sm text-red-300 bg-red-500/10 border border-red-400/20 rounded-xl px-3 py-2"></div>
+      <div id="auth-loading" class="hidden mt-4 text-center text-xs text-slate-400">Memproses...</div>
     </div>
   </div>
 
-  <!-- JavaScript Logic -->
+  <!-- ===================== MAIN APP ===================== -->
+  <div id="app-screen" class="hidden-strict min-h-full flex flex-col">
+    <!-- NAVBAR -->
+    <header class="sticky top-0 z-40 border-b border-slate-700/50 bg-[#0b132b]/90 backdrop-blur-md">
+      <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400/25 to-emerald-400/20 border border-cyan-300/20 flex items-center justify-center shrink-0">
+            <span class="text-cyan-300 font-extrabold text-sm">KF</span>
+          </div>
+          <div class="min-w-0">
+            <h1 class="text-base sm:text-lg font-extrabold text-white leading-tight">KampusFind</h1>
+            <p class="text-[11px] text-slate-400 truncate">Halo, <span id="nav-username" class="text-cyan-300 font-semibold">User</span></p>
+          </div>
+        </div>
+        <button id="logout-btn" class="shrink-0 rounded-xl px-3.5 py-2 text-xs font-bold border border-slate-600/80 bg-panel hover:bg-panel2 text-slate-200 transition">
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <!-- TABS -->
+    <div class="max-w-6xl mx-auto w-full px-4 pt-5">
+      <div class="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-panel/70 border border-slate-700/50">
+        <button id="tab-lostfound" class="tab-btn tab-active rounded-xl px-3 py-2.5 text-sm font-bold border border-transparent transition">
+          Lost & Found
+        </button>
+        <button id="tab-nebeng" class="tab-btn rounded-xl px-3 py-2.5 text-sm font-bold border border-transparent text-slate-400 hover:text-slate-200 transition">
+          Nebeng Kampus
+        </button>
+      </div>
+    </div>
+
+    <main class="flex-1 max-w-6xl mx-auto w-full px-4 py-5">
+      <!-- ========== LOST & FOUND PANEL ========== -->
+      <section id="panel-lostfound" class="fade-in">
+        <div class="grid lg:grid-cols-5 gap-5">
+          <!-- Form -->
+          <div class="lg:col-span-2 glass rounded-2xl p-5 glow-cyan h-fit">
+            <h2 class="text-lg font-bold text-white mb-1">Buat Postingan</h2>
+            <p class="text-xs text-slate-400 mb-4">Laporkan barang hilang atau ditemukan.</p>
+            <form id="lf-form" class="space-y-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Jenis</label>
+                <select id="lf-type" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white">
+                  <option value="lost">Hilang</option>
+                  <option value="found">Ditemukan</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Judul Barang</label>
+                <input id="lf-title" required maxlength="80" placeholder="Contoh: Dompet hitam" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Lokasi</label>
+                <input id="lf-location" required maxlength="80" placeholder="Contoh: Gedung T3.3" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Deskripsi</label>
+                <textarea id="lf-desc" required rows="3" maxlength="400" placeholder="Ciri-ciri barang" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500 resize-y"></textarea>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Kontak (No WA)</label>
+                <input id="lf-contact" required maxlength="60" placeholder="08123456789" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500" />
+              </div>
+              <button type="submit" id="lf-submit-btn" class="w-full rounded-xl py-2.5 text-sm font-bold text-deep bg-gradient-to-r from-cyan-300 to-emerald-300 hover:opacity-95 transition">
+                Publikasikan
+              </button>
+            </form>
+          </div>
+
+          <!-- List -->
+          <div class="lg:col-span-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+              <div>
+                <h2 class="text-lg font-bold text-white">Feed Lost & Found</h2>
+              </div>
+              <div class="flex gap-2">
+                <select id="lf-filter" class="input-dark rounded-xl px-3 py-2 text-xs text-white">
+                  <option value="all">Semua</option>
+                  <option value="lost">Hilang</option>
+                  <option value="found">Ditemukan</option>
+                </select>
+                <input id="lf-search" type="search" placeholder="Cari..." class="input-dark rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-500 w-36 sm:w-44" />
+              </div>
+            </div>
+            <div id="lf-list" class="space-y-3 scroll-thin"></div>
+            <div id="lf-empty" class="hidden text-center py-16 text-slate-500 text-sm">Belum ada postingan Lost & Found.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== NEBENG PANEL ========== -->
+      <section id="panel-nebeng" class="hidden fade-in">
+        <div class="grid lg:grid-cols-5 gap-5">
+          <div class="lg:col-span-2 glass rounded-2xl p-5 glow-em h-fit">
+            <h2 class="text-lg font-bold text-white mb-1">Posting Nebeng</h2>
+            <p class="text-xs text-slate-400 mb-4">Tawarkan atau cari tumpangan.</p>
+            <form id="nb-form" class="space-y-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Tipe</label>
+                <select id="nb-type" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white">
+                  <option value="offer">Nawarin tumpangan</option>
+                  <option value="need">Cari tumpangan</option>
+                </select>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-400 mb-1">Dari</label>
+                  <input id="nb-from" required maxlength="50" placeholder="Asal" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-400 mb-1">Ke</label>
+                  <input id="nb-to" required maxlength="50" placeholder="Tujuan" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500" />
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-400 mb-1">Tanggal</label>
+                  <input id="nb-date" type="date" required class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-400 mb-1">Jam</label>
+                  <input id="nb-time" type="time" required class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white" />
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Kursi / Catatan</label>
+                <input id="nb-note" maxlength="120" placeholder="Contoh: 2 kursi, lewat tol" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Kontak (No WA)</label>
+                <input id="nb-contact" required maxlength="60" placeholder="08123456789" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500" />
+              </div>
+              <button type="submit" id="nb-submit-btn" class="w-full rounded-xl py-2.5 text-sm font-bold text-deep bg-gradient-to-r from-emerald-300 to-cyan-300 hover:opacity-95 transition">
+                Publikasikan
+              </button>
+            </form>
+          </div>
+
+          <div class="lg:col-span-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+              <div>
+                <h2 class="text-lg font-bold text-white">Nebeng Kampus</h2>
+              </div>
+              <div class="flex gap-2">
+                <select id="nb-filter" class="input-dark rounded-xl px-3 py-2 text-xs text-white">
+                  <option value="all">Semua</option>
+                  <option value="offer">Nawarin</option>
+                  <option value="need">Cari</option>
+                </select>
+                <input id="nb-search" type="search" placeholder="Cari rute..." class="input-dark rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-500 w-36 sm:w-44" />
+              </div>
+            </div>
+            <div id="nb-list" class="space-y-3"></div>
+            <div id="nb-empty" class="hidden text-center py-16 text-slate-500 text-sm">Belum ada postingan nebeng.</div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-slate-800/80 py-4 text-center text-[11px] text-slate-500">
+      KampusFind · Fidelia Ping + Ilham Risanjaya
+    </footer>
+  </div>
+
+  <!-- ===================== MODAL KONFIRMASI HAPUS ===================== -->
+  <div id="delete-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm fade-in">
+    <div class="w-full max-w-sm glass rounded-2xl p-6 glow-cyan text-center space-y-4">
+      <div class="w-12 h-12 rounded-full bg-red-500/20 text-red-400 mx-auto flex items-center justify-center text-xl font-bold border border-red-500/30">
+        🗑️
+      </div>
+      <div>
+        <h3 class="text-lg font-bold text-white">Anda Yakin?</h3>
+        <p class="text-xs text-slate-400 mt-1">Postingan akan dihapus secara permanen.</p>
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button id="modal-cancel-btn" class="flex-1 rounded-xl py-2.5 text-xs font-bold border border-slate-600 bg-panel hover:bg-panel2 text-slate-300 transition">
+          Batal
+        </button>
+        <button id="modal-confirm-btn" class="flex-1 rounded-xl py-2.5 text-xs font-bold bg-red-500 hover:bg-red-600 text-white transition">
+          Ya, Hapus
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Kustom -->
+  <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 hidden px-4 py-2.5 rounded-xl text-sm font-semibold shadow-xl transition-all"></div>
+
+  <!-- Bind Form Switcher -->
   <script>
-    // Mock Data Awal (biar aplikasi tidak kosong saat pertama dibuka juri)
-    const initialPosts = [
-      {
-        id: 1,
-        type: "ditemukan",
-        title: "KTM UTDI a.n Rian Prasetya",
-        location: "Gedung A R.302",
-        desc: "Ditemukan terselip di bawah meja kelas jam 12 siang. Sudah diamankan di Satpam.",
-        wa: "081234567890",
-        img: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500&auto=format&fit=crop&q=60",
-        date: "Hari ini, 12:30",
-        status: "aktif"
-      },
-      {
-        id: 2,
-        type: "nebeng_tebangan",
-        title: "Nebeng Motor ke arah Malioboro / Stasiun Tugu",
-        location: "Kumpul di Parkiran Motor Belakang",
-        desc: "Sisa 1 slot helm. Jalan jam 16:30 pas kelar kuliah. Bayar seikhlasnya / ganti es teh.",
-        wa: "089876543210",
-        img: "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=500&auto=format&fit=crop&q=60",
-        date: "Hari ini, 14:00",
-        status: "aktif"
+    (function () {
+      const toRegister = document.getElementById('to-register');
+      const toLogin = document.getElementById('to-login');
+      const loginForm = document.getElementById('login-form');
+      const registerForm = document.getElementById('register-form');
+      const authError = document.getElementById('auth-error');
+
+      function clearAuthError() {
+        if (!authError) return;
+        authError.classList.add('hidden');
+        authError.textContent = '';
       }
-    ];
 
-    let posts = JSON.parse(localStorage.getItem('kampus_find_posts')) || initialPosts;
-    let currentTab = 'lost_found'; // 'lost_found' atau 'nebeng'
+      if (toRegister && loginForm && registerForm) {
+        toRegister.addEventListener('click', function () {
+          loginForm.classList.add('hidden');
+          registerForm.classList.remove('hidden');
+          clearAuthError();
+        });
+      }
+      if (toLogin && loginForm && registerForm) {
+        toLogin.addEventListener('click', function () {
+          registerForm.classList.add('hidden');
+          loginForm.classList.remove('hidden');
+          clearAuthError();
+        });
+      }
+    })();
+  </script>
 
-    // DOM Elements
-    const postsGrid = document.getElementById('postsGrid');
-    const modalForm = document.getElementById('modalForm');
-    const openModalBtn = document.getElementById('openModalBtn');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    const postForm = document.getElementById('postForm');
-    const searchInput = document.getElementById('searchInput');
-    const filterCategory = document.getElementById('filterCategory');
-    const tabLostFound = document.getElementById('tabLostFound');
-    const tabNebeng = document.getElementById('tabNebeng');
+  <!-- Supabase JS v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    // Save Data
-    function saveData() {
-      localStorage.setItem('kampus_find_posts', JSON.stringify(posts));
+  <script>
+    /*******************************************************
+     * SUPABASE CONFIG
+     *******************************************************/
+    const SUPABASE_URL = "https://hthflcgptpughhpqxbqn.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0aGZsY2dwdHB1Z2hocHF4YnFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwMTU2MzYsImV4cCI6MjEwMTU5MTYzNn0.ibD03KJ1SYJ0nTbZJqxavIRROVsGrtvgn2jgUEWgGEM";
+    
+    let supabaseClient = null;
+    try {
+      if (window.supabase) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      }
+    } catch (e) {
+      console.error('Supabase gagal dimuat:', e);
     }
 
-    // Format Nomor WA ke format Internasional (62)
-    function formatWaNumber(wa) {
-      let cleaned = wa.replace(/\D/g, '');
+    // State
+    let currentUser = null;
+    let lfPosts = [];
+    let nbPosts = [];
+    let lfChannel = null;
+    let nbChannel = null;
+
+    // Delete Modal State
+    let deleteTargetId = null;
+    let deleteTargetType = null;
+
+    // DOM refs
+    const authScreen = document.getElementById('auth-screen');
+    const appScreen = document.getElementById('app-screen');
+    const navUsername = document.getElementById('nav-username');
+
+    // ---------- Utils ----------
+    function showToast(msg, isError = false) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = `fixed bottom-5 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl text-sm font-semibold border shadow-xl transition-all ${
+        isError 
+          ? 'bg-red-900/90 border-red-500/50 text-red-100' 
+          : 'bg-panel border-cyan-400/30 text-cyan-100'
+      }`;
+      t.classList.remove('hidden');
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(() => t.classList.add('hidden'), 2600);
+    }
+
+    function setAuthError(msg) {
+      const el = document.getElementById('auth-error');
+      if (!msg) {
+        el.classList.add('hidden');
+        el.textContent = '';
+        return;
+      }
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+
+    function setAuthLoading(on) {
+      document.getElementById('auth-loading').classList.toggle('hidden', !on);
+      document.getElementById('login-btn').disabled = on;
+      document.getElementById('register-btn').disabled = on;
+    }
+
+    function mapAuthError(err) {
+      const msg = (err && err.message) || '';
+      if (/already registered/i.test(msg)) return 'Email sudah terdaftar.';
+      if (/invalid login credentials/i.test(msg)) return 'Email atau password salah.';
+      if (/at least 6 characters/i.test(msg)) return 'Password terlalu lemah (min. 6 karakter).';
+      if (/invalid format|invalid email/i.test(msg)) return 'Format email tidak valid.';
+      if (/not confirmed/i.test(msg)) return 'Email belum dikonfirmasi. Cek kotak masuk Anda.';
+      if (/rate limit/i.test(msg)) return 'Terlalu banyak percobaan. Coba lagi nanti.';
+      if (/network|failed to fetch|fetch failed/i.test(msg)) return 'Gagal jaringan. Periksa koneksi Anda.';
+      return msg || 'Terjadi kesalahan autentikasi.';
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function formatTime(ts) {
+      try {
+        const d = ts ? new Date(ts) : new Date();
+        return d.toLocaleString('id-ID', {
+          day: '2-digit', month: 'short', year: 'numeric',
+          hour: '2-digit', minute: '2-digit'
+        });
+      } catch {
+        return '-';
+      }
+    }
+
+    function formatWAUrl(phone) {
+      if (!phone) return '#';
+      let cleaned = String(phone).replace(/\D/g, '');
       if (cleaned.startsWith('0')) {
         cleaned = '62' + cleaned.slice(1);
       }
-      return cleaned;
+      return `https://wa.me/${cleaned}`;
     }
 
-    // Badge Style & Label Generator
-    function getBadge(type) {
-      switch(type) {
-        case 'hilang': return `<span class="bg-rose-500/20 text-rose-400 border border-rose-500/40 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">🔴 Barang Hilang</span>`;
-        case 'ditemukan': return `<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">🟢 Barang Ditemukan</span>`;
-        case 'nebeng_tebangan': return `<span class="bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">🚗 Ada Tebangan</span>`;
-        case 'nebeng_cari': return `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/40 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">🙋‍♂️ Cari Tebangan</span>`;
+    // ---------- Modal Hapus Logic ----------
+    window.promptDelete = function(id, type) {
+      deleteTargetId = id;
+      deleteTargetType = type;
+      document.getElementById('delete-modal').classList.remove('hidden');
+    };
+
+    function closeDeleteModal() {
+      deleteTargetId = null;
+      deleteTargetType = null;
+      document.getElementById('delete-modal').classList.add('hidden');
+    }
+
+    document.getElementById('modal-cancel-btn').addEventListener('click', closeDeleteModal);
+
+    document.getElementById('modal-confirm-btn').addEventListener('click', async () => {
+      if (!deleteTargetId || !deleteTargetType || !supabaseClient) return;
+
+      const id = deleteTargetId;
+      const type = deleteTargetType;
+      closeDeleteModal();
+
+      try {
+        const { error } = await supabaseClient.from(type).delete().eq('id', id);
+        if (error) throw error;
+
+        if (type === 'lostfound') {
+          lfPosts = lfPosts.filter(p => p.id !== id);
+          renderLF();
+        } else {
+          nbPosts = nbPosts.filter(p => p.id !== id);
+          renderNB();
+        }
+
+        showToast('Postingan berhasil dihapus!');
+      } catch (err) {
+        showToast('Gagal menghapus: ' + err.message, true);
+      }
+    });
+
+    // ---------- Register ----------
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!supabaseClient) {
+        setAuthError('Gagal memuat layanan database.');
+        return;
+      }
+      setAuthError('');
+      setAuthLoading(true);
+
+      const name = document.getElementById('reg-name').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const password = document.getElementById('reg-password').value;
+
+      try {
+        const { data: signUpData, error: signUpError } = await supabaseClient.auth.signUp({
+          email,
+          password,
+          options: { data: { full_name: name } }
+        });
+        if (signUpError) throw signUpError;
+
+        showToast('Pendaftaran berhasil! Silakan login.');
+        document.getElementById('to-login').click();
+      } catch (err) {
+        setAuthError(mapAuthError(err));
+      } finally {
+        setAuthLoading(false);
+      }
+    });
+
+    // ---------- Login ----------
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!supabaseClient) {
+        setAuthError('Gagal memuat layanan database.');
+        return;
+      }
+      setAuthError('');
+      setAuthLoading(true);
+
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      try {
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        showToast('Login berhasil!');
+      } catch (err) {
+        setAuthError(mapAuthError(err));
+      } finally {
+        setAuthLoading(false);
+      }
+    });
+
+    // ---------- Logout ----------
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      try {
+        if (supabaseClient) await supabaseClient.auth.signOut();
+        showToast('Berhasil logout.');
+      } catch (err) {
+        showToast('Gagal logout: ' + err.message, true);
+      }
+    });
+
+    // ---------- Auth Observer ----------
+    function handleAuthState(session) {
+      if (session && session.user) {
+        currentUser = {
+          uid: session.user.id,
+          email: session.user.email,
+          name: (session.user.user_metadata && session.user.user_metadata.full_name) ||
+                (session.user.email ? session.user.email.split('@')[0] : 'User') || 'User'
+        };
+        navUsername.textContent = currentUser.name;
+        authScreen.classList.add('hidden-strict');
+        appScreen.classList.remove('hidden-strict');
+
+        initRealtime();
+      } else {
+        currentUser = null;
+        teardownRealtime();
+        appScreen.classList.add('hidden-strict');
+        authScreen.classList.remove('hidden-strict');
       }
     }
 
-    // Render Cards
-    function renderPosts() {
-      postsGrid.innerHTML = '';
-      
-      const search = searchInput.value.toLowerCase();
-      const cat = filterCategory.value;
+    if (supabaseClient) {
+      supabaseClient.auth.onAuthStateChange((event, session) => {
+        handleAuthState(session);
+      });
+    }
 
-      const filtered = posts.filter(item => {
-        // Filter Berdasarkan Tab Aktif
-        const matchTab = currentTab === 'lost_found' 
-          ? (item.type === 'hilang' || item.type === 'ditemukan')
-          : (item.type === 'nebeng_tebangan' || item.type === 'nebeng_cari');
+    // ---------- Tabs ----------
+    const tabLF = document.getElementById('tab-lostfound');
+    const tabNB = document.getElementById('tab-nebeng');
+    const panelLF = document.getElementById('panel-lostfound');
+    const panelNB = document.getElementById('panel-nebeng');
 
-        // Filter Search & Category
-        const matchSearch = item.title.toLowerCase().includes(search) || 
-                            item.location.toLowerCase().includes(search) || 
-                            item.desc.toLowerCase().includes(search);
-        const matchCat = (cat === 'semua') || (item.type === cat);
+    tabLF.addEventListener('click', () => {
+      tabLF.classList.add('tab-active');
+      tabLF.classList.remove('text-slate-400');
+      tabNB.classList.remove('tab-active');
+      tabNB.classList.add('text-slate-400');
+      panelLF.classList.remove('hidden');
+      panelNB.classList.add('hidden');
+    });
 
-        return matchTab && matchSearch && matchCat;
+    tabNB.addEventListener('click', () => {
+      tabNB.classList.add('tab-active');
+      tabNB.classList.remove('text-slate-400');
+      tabLF.classList.remove('tab-active');
+      tabLF.classList.add('text-slate-400');
+      panelNB.classList.remove('hidden');
+      panelLF.classList.add('hidden');
+    });
+
+    // ============================================================
+    // Realtime Data
+    // ============================================================
+    async function teardownRealtime() {
+      if (!supabaseClient) return;
+      if (lfChannel) await supabaseClient.removeChannel(lfChannel);
+      if (nbChannel) await supabaseClient.removeChannel(nbChannel);
+      lfChannel = null;
+      nbChannel = null;
+      lfPosts = [];
+      nbPosts = [];
+    }
+
+    async function initRealtime() {
+      if (!supabaseClient) return;
+      await teardownRealtime();
+      await Promise.all([fetchLF(), fetchNB()]);
+
+      subscribeLF();
+      subscribeNB();
+    }
+
+    // ---------- Lost & Found ----------
+    async function fetchLF() {
+      if (!supabaseClient) return;
+      const { data, error } = await supabaseClient
+        .from('lostfound')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) { console.error('LF Fetch error:', error.message); return; }
+      lfPosts = data || [];
+      renderLF();
+    }
+
+    function subscribeLF() {
+      if (!supabaseClient) return;
+      lfChannel = supabaseClient.channel('lostfound-changes')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'lostfound' }, (payload) => {
+          if (!lfPosts.some(p => p.id === payload.new.id)) {
+            lfPosts = [payload.new, ...lfPosts];
+            renderLF();
+          }
+        })
+        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'lostfound' }, (payload) => {
+          lfPosts = lfPosts.map(p => p.id === payload.new.id ? payload.new : p);
+          renderLF();
+        })
+        .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'lostfound' }, (payload) => {
+          lfPosts = lfPosts.filter(p => p.id !== payload.old.id);
+          renderLF();
+        })
+        .subscribe();
+    }
+
+    // ---------- Board Nebeng ----------
+    async function fetchNB() {
+      if (!supabaseClient) return;
+      const { data, error } = await supabaseClient
+        .from('nebeng')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) { console.error('NB Fetch error:', error.message); return; }
+      nbPosts = data || [];
+      renderNB();
+    }
+
+    function subscribeNB() {
+      if (!supabaseClient) return;
+      nbChannel = supabaseClient.channel('nebeng-changes')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'nebeng' }, (payload) => {
+          if (!nbPosts.some(p => p.id === payload.new.id)) {
+            nbPosts = [payload.new, ...nbPosts];
+            renderNB();
+          }
+        })
+        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'nebeng' }, (payload) => {
+          nbPosts = nbPosts.map(p => p.id === payload.new.id ? payload.new : p);
+          renderNB();
+        })
+        .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'nebeng' }, (payload) => {
+          nbPosts = nbPosts.filter(p => p.id !== payload.old.id);
+          renderNB();
+        })
+        .subscribe();
+    }
+
+    // ============================================================
+    // Lost & Found CRUD
+    // ============================================================
+    document.getElementById('lf-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentUser || !supabaseClient) return;
+
+      const submitBtn = document.getElementById('lf-submit-btn');
+      submitBtn.disabled = true;
+
+      const payload = {
+        type: document.getElementById('lf-type').value,
+        title: document.getElementById('lf-title').value.trim(),
+        location: document.getElementById('lf-location').value.trim(),
+        desc: document.getElementById('lf-desc').value.trim(),
+        contact: document.getElementById('lf-contact').value.trim(),
+        user_id: currentUser.uid,
+        user_name: currentUser.name
+      };
+
+      try {
+        const { data, error } = await supabaseClient
+          .from('lostfound')
+          .insert([payload])
+          .select();
+
+        if (error) throw error;
+
+        if (data && data[0] && !lfPosts.some(p => p.id === data[0].id)) {
+          lfPosts = [data[0], ...lfPosts];
+          renderLF();
+        }
+
+        e.target.reset();
+        showToast('Postingan berhasil dipublikasikan!');
+      } catch (err) {
+        showToast('Gagal membuat postingan: ' + err.message, true);
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    function renderLF() {
+      const filter = document.getElementById('lf-filter').value;
+      const search = document.getElementById('lf-search').value.toLowerCase();
+      const container = document.getElementById('lf-list');
+      const empty = document.getElementById('lf-empty');
+
+      const filtered = lfPosts.filter(p => {
+        const matchFilter = filter === 'all' || p.type === filter;
+        const matchSearch = (p.title || '').toLowerCase().includes(search) ||
+                            (p.location || '').toLowerCase().includes(search) ||
+                            (p.desc || '').toLowerCase().includes(search);
+        return matchFilter && matchSearch;
       });
 
       if (filtered.length === 0) {
-        postsGrid.innerHTML = `
-          <div class="col-span-full text-center py-12 bg-slate-900/40 rounded-2xl border border-slate-800/80">
-            <span class="text-4xl block mb-2">📭</span>
-            <p class="text-slate-400 text-sm font-semibold">Belum ada postingan di kategori ini.</p>
-          </div>
-        `;
+        container.innerHTML = '';
+        empty.classList.remove('hidden');
         return;
       }
+      empty.classList.add('hidden');
 
-      filtered.forEach(item => {
-        const waClean = formatWaNumber(item.wa);
-        const waText = encodeURIComponent(`Halo, saya lihat postingan kamu di KampusFind mengenai: "${item.title}". Apakah masih ada/tersedia?`);
-        const waUrl = `https://wa.me/${waClean}?text=${waText}`;
+      container.innerHTML = filtered.map(p => {
+        const isOwner = currentUser && p.user_id === currentUser.uid;
+        const badgeClass = p.type === 'lost' ? 'badge-lost' : 'badge-found';
+        const badgeLabel = p.type === 'lost' ? 'Hilang' : 'Ditemukan';
 
-        const card = document.createElement('div');
-        card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between hover:border-slate-700 transition shadow-xl space-y-3";
-        
-        const defaultImg = 'https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?w=500&auto=format&fit=crop&q=60';
-        const imgUrl = item.img && item.img.trim() !== '' ? item.img : defaultImg;
-
-        card.innerHTML = `
-          <div>
-            <div class="flex justify-between items-start mb-2 gap-2">
-              ${getBadge(item.type)}
-              <span class="text-[10px] text-slate-500 font-medium">${item.date}</span>
+        return `
+          <div class="glass rounded-2xl p-4 space-y-2 relative fade-in">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-lg ${badgeClass}">${badgeLabel}</span>
+              <span class="text-[10px] text-slate-400">${formatTime(p.created_at)}</span>
             </div>
-            
-            ${item.type.includes('hilang') || item.type.includes('ditemukan') ? `
-              <img src="${imgUrl}" alt="${item.title}" class="w-full h-36 object-cover rounded-xl mb-3 border border-slate-800">
-            ` : ''}
-
-            <h3 class="font-bold text-base text-white leading-snug">${item.title}</h3>
-            <p class="text-xs text-cyan-400/90 font-medium mt-1 flex items-center gap-1">
-              <span>📍</span> ${item.location}
-            </p>
-            <p class="text-xs text-slate-300 mt-2 leading-relaxed bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/50">
-              ${item.desc}
-            </p>
-          </div>
-
-          <div class="pt-2 border-t border-slate-800/80 flex gap-2">
-            <a href="${waUrl}" target="_blank" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded-xl text-center transition flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/20">
-              <span>💬</span> Hubungi via WA
-            </a>
-            <button onclick="deletePost(${item.id})" class="bg-slate-800 hover:bg-rose-950/50 text-slate-400 hover:text-rose-400 p-2.5 rounded-xl text-xs transition border border-slate-700" title="Hapus Posting">
-              🗑️
-            </button>
+            <h3 class="font-bold text-white text-base">${escapeHtml(p.title)}</h3>
+            <p class="text-xs text-slate-300 font-medium">📍 ${escapeHtml(p.location)}</p>
+            <p class="text-xs text-slate-400 leading-relaxed">${escapeHtml(p.desc)}</p>
+            <div class="pt-2 border-t border-slate-700/50 flex items-center justify-between gap-2 text-xs">
+              <span class="text-slate-400">Oleh: <strong class="text-slate-200">${escapeHtml(p.user_name || 'Anonim')}</strong></span>
+              <div class="flex items-center gap-2">
+                <a href="${formatWAUrl(p.contact)}" target="_blank" rel="noopener noreferrer" class="text-cyan-300 font-semibold hover:underline">
+                  📞 ${escapeHtml(p.contact)}
+                </a>
+                ${isOwner ? `<button onclick="promptDelete('${p.id}', 'lostfound')" class="text-red-400 hover:text-red-300 font-bold ml-2">Hapus</button>` : ''}
+              </div>
+            </div>
           </div>
         `;
-        postsGrid.appendChild(card);
-      });
+      }).join('');
     }
 
-    // Delete Post
-    window.deletePost = function(id) {
-      if (confirm("Hapus postingan ini?")) {
-        posts = posts.filter(p => p.id !== id);
-        saveData();
-        renderPosts();
-      }
-    }
+    document.getElementById('lf-filter').addEventListener('change', renderLF);
+    document.getElementById('lf-search').addEventListener('input', renderLF);
 
-    // Switch Tabs
-    tabLostFound.addEventListener('click', () => {
-      currentTab = 'lost_found';
-      tabLostFound.className = "tab-btn flex-1 py-2.5 rounded-xl text-center transition bg-cyan-500 text-slate-950 font-bold shadow";
-      tabNebeng.className = "tab-btn flex-1 py-2.5 rounded-xl text-center transition text-slate-400 hover:text-white";
-      renderPosts();
-    });
-
-    tabNebeng.addEventListener('click', () => {
-      currentTab = 'nebeng';
-      tabNebeng.className = "tab-btn flex-1 py-2.5 rounded-xl text-center transition bg-cyan-500 text-slate-950 font-bold shadow";
-      tabLostFound.className = "tab-btn flex-1 py-2.5 rounded-xl text-center transition text-slate-400 hover:text-white";
-      renderPosts();
-    });
-
-    // Form Event
-    postForm.addEventListener('submit', (e) => {
+    // ============================================================
+    // Board Nebeng CRUD
+    // ============================================================
+    document.getElementById('nb-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      
-      const newPost = {
-        id: Date.now(),
-        type: document.getElementById('postType').value,
-        title: document.getElementById('postTitle').value.trim(),
-        location: document.getElementById('postLocation').value.trim(),
-        desc: document.getElementById('postDesc').value.trim(),
-        wa: document.getElementById('postWa').value.trim(),
-        img: document.getElementById('postImg').value.trim(),
-        date: 'Baru saja',
-        status: 'aktif'
+      if (!currentUser || !supabaseClient) return;
+
+      const submitBtn = document.getElementById('nb-submit-btn');
+      submitBtn.disabled = true;
+
+      const payload = {
+        type: document.getElementById('nb-type').value,
+        from: document.getElementById('nb-from').value.trim(),
+        to: document.getElementById('nb-to').value.trim(),
+        date: document.getElementById('nb-date').value,
+        time: document.getElementById('nb-time').value,
+        note: document.getElementById('nb-note').value.trim(),
+        contact: document.getElementById('nb-contact').value.trim(),
+        user_id: currentUser.uid,
+        user_name: currentUser.name
       };
 
-      posts.unshift(newPost);
-      saveData();
-      renderPosts();
-      
-      postForm.reset();
-      modalForm.classList.add('hidden');
+      try {
+        const { data, error } = await supabaseClient
+          .from('nebeng')
+          .insert([payload])
+          .select();
+
+        if (error) throw error;
+
+        if (data && data[0] && !nbPosts.some(p => p.id === data[0].id)) {
+          nbPosts = [data[0], ...nbPosts];
+          renderNB();
+        }
+
+        e.target.reset();
+        showToast('Posting nebeng berhasil dipublikasikan!');
+      } catch (err) {
+        showToast('Gagal posting nebeng: ' + err.message, true);
+      } finally {
+        submitBtn.disabled = false;
+      }
     });
 
-    // Modal Control
-    openModalBtn.addEventListener('click', () => modalForm.classList.remove('hidden'));
-    closeModalBtn.addEventListener('click', () => modalForm.classList.add('hidden'));
+    function renderNB() {
+      const filter = document.getElementById('nb-filter').value;
+      const search = document.getElementById('nb-search').value.toLowerCase();
+      const container = document.getElementById('nb-list');
+      const empty = document.getElementById('nb-empty');
 
-    // Filter Listeners
-    searchInput.addEventListener('input', renderPosts);
-    filterCategory.addEventListener('change', renderPosts);
+      const filtered = nbPosts.filter(p => {
+        const matchFilter = filter === 'all' || p.type === filter;
+        const matchSearch = (p.from || '').toLowerCase().includes(search) ||
+                            (p.to || '').toLowerCase().includes(search) ||
+                            (p.note || '').toLowerCase().includes(search);
+        return matchFilter && matchSearch;
+      });
 
-    // Initial Render
-    renderPosts();
+      if (filtered.length === 0) {
+        container.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      container.innerHTML = filtered.map(p => {
+        const isOwner = currentUser && p.user_id === currentUser.uid;
+        const badgeClass = 'badge-nebeng';
+        const badgeLabel = p.type === 'offer' ? 'Nawarin Tumpangan' : 'Cari Tumpangan';
+
+        return `
+          <div class="glass rounded-2xl p-4 space-y-2 relative fade-in">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-lg ${badgeClass}">${badgeLabel}</span>
+              <span class="text-[10px] text-slate-400">${formatTime(p.created_at)}</span>
+            </div>
+            <h3 class="font-bold text-white text-base">${escapeHtml(p.from)} ➔ ${escapeHtml(p.to)}</h3>
+            <p class="text-xs text-slate-300 font-medium">📅 ${escapeHtml(p.date)} · ⏰ ${escapeHtml(p.time)}</p>
+            ${p.note ? `<p class="text-xs text-slate-400 leading-relaxed">${escapeHtml(p.note)}</p>` : ''}
+            <div class="pt-2 border-t border-slate-700/50 flex items-center justify-between gap-2 text-xs">
+              <span class="text-slate-400">Oleh: <strong class="text-slate-200">${escapeHtml(p.user_name || 'Anonim')}</strong></span>
+              <div class="flex items-center gap-2">
+                <a href="${formatWAUrl(p.contact)}" target="_blank" rel="noopener noreferrer" class="text-emerald-300 font-semibold hover:underline">
+                  📞 ${escapeHtml(p.contact)}
+                </a>
+                ${isOwner ? `<button onclick="promptDelete('${p.id}', 'nebeng')" class="text-red-400 hover:text-red-300 font-bold ml-2">Hapus</button>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    document.getElementById('nb-filter').addEventListener('change', renderNB);
+    document.getElementById('nb-search').addEventListener('input', renderNB);
   </script>
 </body>
 </html>
