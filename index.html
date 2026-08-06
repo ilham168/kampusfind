@@ -3,434 +3,330 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RPG Budget: Survive the Month</title>
-  <!-- Tailwind CSS via CDN -->
+  <title>KampusFind - Lost & Found & Nebeng Kampus</title>
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts CDN (bukan npm/node) -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --pixel-border: #0f0f1a;
-    }
-    * { image-rendering: pixelated; }
     body {
-      font-family: 'VT323', monospace;
-      background-color: #14142b;
-      background-image:
-        linear-gradient(#1c1c3a 1px, transparent 1px),
-        linear-gradient(90deg, #1c1c3a 1px, transparent 1px);
-      background-size: 24px 24px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0b132b;
     }
-    .font-pixel { font-family: 'Press Start 2P', cursive; }
-
-    /* Pixel-art border: hard edges, no radius, layered box-shadow "bevel" */
-    .pixel-panel {
-      border-radius: 0;
-      border: 4px solid var(--pixel-border);
-      box-shadow:
-        0 0 0 2px #4a4a7a,
-        6px 6px 0 0 var(--pixel-border);
-    }
-    .pixel-btn {
-      border-radius: 0;
-      border: 3px solid var(--pixel-border);
-      box-shadow: 4px 4px 0 0 var(--pixel-border);
-      transition: transform 0.05s ease, box-shadow 0.05s ease;
-    }
-    .pixel-btn:active {
-      transform: translate(4px, 4px);
-      box-shadow: 0 0 0 0 var(--pixel-border);
-    }
-    .pixel-input {
-      border-radius: 0;
-      border: 3px solid var(--pixel-border);
-      box-shadow: inset 3px 3px 0 0 rgba(0,0,0,0.35);
-    }
-    .pixel-chip {
-      border-radius: 0;
-      border: 2px solid var(--pixel-border);
-      box-shadow: 3px 3px 0 0 var(--pixel-border);
-      transition: transform 0.05s ease;
-    }
-    .pixel-chip:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 0 var(--pixel-border); }
-    .pixel-chip.active-chip {
-      box-shadow: inset 2px 2px 0 0 rgba(0,0,0,0.4);
-      transform: translate(2px, 2px);
-    }
-
-    /* Segmented HP bar, Mega Man style */
-    .hp-segments {
-      display: grid;
-      grid-template-columns: repeat(20, 1fr);
-      gap: 2px;
-    }
-    .hp-seg {
-      height: 16px;
-      background: #0f0f1a;
-      border: 1px solid #000;
-    }
-    .hp-seg.filled-green { background: #3ddc84; }
-    .hp-seg.filled-amber { background: #ffcc33; }
-    .hp-seg.filled-red { background: #ff4d5e; }
-
-    @keyframes pulse-red {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.45; }
-    }
-    .low-hp .filled-red { animation: pulse-red 0.8s infinite steps(2); }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20% { transform: translateX(-4px); }
-      40% { transform: translateX(4px); }
-      60% { transform: translateX(-3px); }
-      80% { transform: translateX(3px); }
-    }
-    .shake { animation: shake 0.3s steps(2); }
-
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #0f0f1a; }
-    ::-webkit-scrollbar-thumb { background: #4a4a7a; }
   </style>
 </head>
-<body class="text-slate-100 min-h-screen flex items-center justify-center p-4">
+<body class="text-slate-100 min-h-screen pb-12">
+
+  <!-- Header / Navbar -->
+  <header class="bg-slate-900/80 backdrop-blur border-b border-slate-800 sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 py-4 flex flex-wrap justify-between items-center gap-3">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">🎓</span>
+        <div>
+          <h1 class="text-xl font-extrabold text-cyan-400 tracking-wide">KampusFind</h1>
+          <p class="text-[11px] text-slate-400">Hub Lost & Found + Nebeng Kampus UTDI</p>
+        </div>
+      </div>
+      <button id="openModalBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm transition active:scale-95 flex items-center gap-1.5 shadow-lg shadow-cyan-500/20">
+        <span>➕</span> Buat Posting Baru
+      </button>
+    </div>
+  </header>
 
   <!-- Main Container -->
-  <div class="max-w-md w-full bg-slate-800 pixel-panel p-6">
+  <main class="max-w-4xl mx-auto px-4 mt-6 space-y-6">
 
-    <!-- Header -->
-    <div class="text-center mb-6">
-      <h1 class="font-pixel text-lg text-amber-400 uppercase flex items-center justify-center gap-2 leading-relaxed">
-        <span>🎮</span> RPG Budget
-      </h1>
-      <p class="text-sm text-slate-400 mt-2 tracking-wide">Survive the Month without Going Broke!</p>
-    </div>
-
-    <!-- TAMPILAN 1: SETUP BUDGET AWAL -->
-    <div id="setupSection" class="space-y-4">
-      <div class="bg-slate-900/60 p-4 pixel-panel">
-        <label class="font-pixel block text-[10px] text-slate-300 uppercase mb-3 leading-relaxed">
-          Set Max HP (Target Budget Bulanan)
-        </label>
-        <div class="flex items-center gap-2">
-          <span class="text-slate-400 text-lg font-bold">Rp</span>
-          <input type="number" id="maxHpInput" placeholder="misal: 1500000"
-            class="pixel-input w-full bg-slate-900 p-2.5 text-white text-lg focus:outline-none focus:border-amber-400">
-        </div>
-      </div>
-      <button id="startBtn" class="font-pixel pixel-btn w-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs py-3 uppercase">
-        🚀 Mulai Survival!
+    <!-- Tab Navigation -->
+    <div class="flex bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 text-sm font-semibold">
+      <button id="tabLostFound" class="tab-btn flex-1 py-2.5 rounded-xl text-center transition bg-cyan-500 text-slate-950 font-bold shadow">
+        🔍 Lost & Found (Barang Hilang)
+      </button>
+      <button id="tabNebeng" class="tab-btn flex-1 py-2.5 rounded-xl text-center transition text-slate-400 hover:text-white">
+        🚗 Board Nebeng Kampus
       </button>
     </div>
 
-    <!-- TAMPILAN 2: DASHBOARD GAME (Awalnya tersembunyi) -->
-    <div id="gameSection" class="hidden space-y-5">
+    <!-- Search & Filter Bar -->
+    <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800 flex flex-col md:flex-row gap-3">
+      <div class="flex-1 relative">
+        <input type="text" id="searchInput" placeholder="Cari nama barang, lokasi, atau rute nebeng..." 
+          class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500 pl-10">
+        <span class="absolute left-3.5 top-3 text-slate-500 text-sm">🔎</span>
+      </div>
+      <select id="filterCategory" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
+        <option value="semua">Semua Kategori</option>
+        <option value="hilang">🔴 Barang Hilang</option>
+        <option value="ditemukan">🟢 Barang Ditemukan</option>
+        <option value="nebeng_tebangan">🚗 Beri Tebangan</option>
+        <option value="nebeng_cari">🙋‍♂️ Cari Tebangan</option>
+      </select>
+    </div>
 
-      <!-- Status Bar & HP -->
-      <div class="bg-slate-900/80 p-4 pixel-panel">
-        <div class="flex justify-between items-center font-pixel text-[9px] mb-3">
-          <span class="text-slate-300 leading-relaxed">DOMPET HP</span>
-          <span id="hpText" class="text-amber-400 leading-relaxed">Rp 0 / Rp 0</span>
-        </div>
+    <!-- Container Kartu Postingan -->
+    <div id="postsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Item postingan dimuat via JS -->
+    </div>
 
-        <!-- Segmented Health Bar -->
-        <div id="hpSegments" class="hp-segments"></div>
+  </main>
+
+  <!-- MODAL FORM INPUT POSTINGAN -->
+  <div id="modalForm" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl relative">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-lg text-cyan-400">Buat Posting Baru</h3>
+        <button id="closeModalBtn" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
       </div>
 
-      <!-- Roasting Box -->
-      <div class="bg-slate-950 pixel-panel p-4 text-center relative overflow-hidden">
-        <span class="font-pixel text-[8px] text-amber-500/60 uppercase block mb-2 leading-relaxed">--- Komentar Sistem ---</span>
-        <p id="roastText" class="text-base text-amber-200 italic leading-snug">
-          "Aplikasi siap memantau gaya hidupmu!"
-        </p>
-      </div>
-
-      <!-- Form Tambah Pengeluaran (Damage) -->
-      <form id="expenseForm" class="space-y-3 bg-slate-900/40 pixel-panel p-4">
-        <h3 class="font-pixel text-[9px] text-slate-400 uppercase leading-relaxed">Input Damage (Pengeluaran Baru)</h3>
+      <form id="postForm" class="space-y-3">
         <div>
-          <input type="text" id="expenseName" required placeholder="Nama pengeluaran (cth: Kopi Kenangan)"
-            class="pixel-input w-full bg-slate-900 p-2 text-sm text-white focus:outline-none focus:border-rose-500">
-        </div>
-        <div class="flex gap-2">
-          <select id="expenseCategory" class="pixel-input bg-slate-900 p-2 text-sm text-white focus:outline-none focus:border-rose-500">
-            <option value="makanan">🍜 Makanan</option>
-            <option value="hiburan">🎮 Hiburan</option>
-            <option value="tagihan">💡 Tagihan</option>
-            <option value="lainnya">📦 Lainnya</option>
+          <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Tipe Posting</label>
+          <select id="postType" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:border-cyan-500">
+            <option value="hilang">🔴 Lost & Found: Barang Hilang</option>
+            <option value="ditemukan">🟢 Lost & Found: Barang Ditemukan</option>
+            <option value="nebeng_tebangan">🚗 Nebeng: Ada Lapak Tebangan Motor/Mobil</option>
+            <option value="nebeng_cari">🙋‍♂️ Nebeng: Butuh Tebangan / Boncengan</option>
           </select>
-          <input type="number" id="expenseAmount" required placeholder="Nominal"
-            class="pixel-input w-full bg-slate-900 p-2 text-sm text-white focus:outline-none focus:border-rose-500">
         </div>
-        <button type="submit" class="font-pixel pixel-btn w-full bg-rose-600 hover:bg-rose-500 text-white text-[10px] py-2.5 uppercase">
-          💥 Kena Damage
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Judul / Nama Barang / Rute</label>
+          <input type="text" id="postTitle" required placeholder="Cth: KTM atas nama Budi / Nebeng ke Janti" 
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:border-cyan-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Lokasi / Titik Kumpul</label>
+          <input type="text" id="postLocation" required placeholder="Cth: Perpustakaan Lantai 2 / Depan Gerbang Utama" 
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:border-cyan-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Deskripsi Ringkas</label>
+          <textarea id="postDesc" rows="2" required placeholder="Cth: Kunci motor Honda gantungan dompet hitam. Ditemukan jam 10 pagi." 
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:border-cyan-500"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Nomor WhatsApp (Aktif)</label>
+          <input type="text" id="postWa" required placeholder="Cth: 081234567890" 
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:border-cyan-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">URL Foto (Opsional)</label>
+          <input type="url" id="postImg" placeholder="https://... (Biarkan kosong jika tidak ada foto)" 
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:border-cyan-500">
+        </div>
+
+        <button type="submit" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg">
+          🚀 Terbitkan Posting
         </button>
       </form>
-
-      <!-- Filter Kategori -->
-      <div>
-        <h3 class="font-pixel text-[9px] text-slate-400 uppercase mb-2 leading-relaxed">Filter Riwayat</h3>
-        <div id="filterChips" class="flex flex-wrap gap-2">
-          <button data-filter="semua" class="filter-chip pixel-chip active-chip bg-slate-700 text-white text-xs px-3 py-1.5">Semua</button>
-          <button data-filter="makanan" class="filter-chip pixel-chip bg-slate-700 text-white text-xs px-3 py-1.5">🍜 Makanan</button>
-          <button data-filter="hiburan" class="filter-chip pixel-chip bg-slate-700 text-white text-xs px-3 py-1.5">🎮 Hiburan</button>
-          <button data-filter="tagihan" class="filter-chip pixel-chip bg-slate-700 text-white text-xs px-3 py-1.5">💡 Tagihan</button>
-        </div>
-      </div>
-
-      <!-- Riwayat Pengeluaran -->
-      <div>
-        <h3 class="font-pixel text-[9px] text-slate-400 uppercase mb-2 leading-relaxed">Riwayat Damage Terbaru</h3>
-        <ul id="historyList" class="space-y-1.5 max-h-32 overflow-y-auto pr-1">
-          <!-- Item riwayat dimuat lewat JS -->
-        </ul>
-      </div>
-
-      <!-- Reset Game -->
-      <button id="resetBtn" class="pixel-btn w-full bg-slate-800 hover:bg-rose-900/30 text-slate-400 hover:text-rose-300 text-xs py-2">
-        🔄 Reset Game / Mulai Bulan Baru
-      </button>
     </div>
-
   </div>
 
-  <!-- JS Logic -->
+  <!-- JavaScript Logic -->
   <script>
-    // State Aplikasi
-    let state = {
-      maxHp: 0,
-      currentHp: 0,
-      history: []
-    };
+    // Mock Data Awal (biar aplikasi tidak kosong saat pertama dibuka juri)
+    const initialPosts = [
+      {
+        id: 1,
+        type: "ditemukan",
+        title: "KTM UTDI a.n Rian Prasetya",
+        location: "Gedung A R.302",
+        desc: "Ditemukan terselip di bawah meja kelas jam 12 siang. Sudah diamankan di Satpam.",
+        wa: "081234567890",
+        img: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500&auto=format&fit=crop&q=60",
+        date: "Hari ini, 12:30",
+        status: "aktif"
+      },
+      {
+        id: 2,
+        type: "nebeng_tebangan",
+        title: "Nebeng Motor ke arah Malioboro / Stasiun Tugu",
+        location: "Kumpul di Parkiran Motor Belakang",
+        desc: "Sisa 1 slot helm. Jalan jam 16:30 pas kelar kuliah. Bayar seikhlasnya / ganti es teh.",
+        wa: "089876543210",
+        img: "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=500&auto=format&fit=crop&q=60",
+        date: "Hari ini, 14:00",
+        status: "aktif"
+      }
+    ];
 
-    let activeFilter = 'semua';
+    let posts = JSON.parse(localStorage.getItem('kampus_find_posts')) || initialPosts;
+    let currentTab = 'lost_found'; // 'lost_found' atau 'nebeng'
 
     // DOM Elements
-    const setupSection = document.getElementById('setupSection');
-    const gameSection = document.getElementById('gameSection');
-    const maxHpInput = document.getElementById('maxHpInput');
-    const startBtn = document.getElementById('startBtn');
-    const hpText = document.getElementById('hpText');
-    const hpSegments = document.getElementById('hpSegments');
-    const roastText = document.getElementById('roastText');
-    const expenseForm = document.getElementById('expenseForm');
-    const expenseName = document.getElementById('expenseName');
-    const expenseAmount = document.getElementById('expenseAmount');
-    const expenseCategory = document.getElementById('expenseCategory');
-    const historyList = document.getElementById('historyList');
-    const resetBtn = document.getElementById('resetBtn');
-    const filterChips = document.querySelectorAll('.filter-chip');
+    const postsGrid = document.getElementById('postsGrid');
+    const modalForm = document.getElementById('modalForm');
+    const openModalBtn = document.getElementById('openModalBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const postForm = document.getElementById('postForm');
+    const searchInput = document.getElementById('searchInput');
+    const filterCategory = document.getElementById('filterCategory');
+    const tabLostFound = document.getElementById('tabLostFound');
+    const tabNebeng = document.getElementById('tabNebeng');
 
-    const CATEGORY_LABEL = {
-      makanan: '🍜 Makanan',
-      hiburan: '🎮 Hiburan',
-      tagihan: '💡 Tagihan',
-      lainnya: '📦 Lainnya'
-    };
-
-    // ===== Web Audio API: 8-bit hit sound =====
-    let audioCtx = null;
-    function getAudioCtx() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      return audioCtx;
-    }
-
-    function playHitSound() {
-      try {
-        const ctx = getAudioCtx();
-        // Beberapa "browser" butuh resume setelah gesture user pertama
-        if (ctx.state === 'suspended') ctx.resume();
-
-        const now = ctx.currentTime;
-        const notes = [220, 165, 110]; // nada turun ala 8-bit "damage hit"
-
-        notes.forEach((freq, i) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'square';
-          osc.frequency.setValueAtTime(freq, now + i * 0.07);
-          gain.gain.setValueAtTime(0.15, now + i * 0.07);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.07 + 0.09);
-          osc.connect(gain).connect(ctx.destination);
-          osc.start(now + i * 0.07);
-          osc.stop(now + i * 0.07 + 0.1);
-        });
-      } catch (err) {
-        // Kalau Web Audio API tidak didukung, cukup diamkan (fitur non-kritis)
-        console.warn('Audio tidak tersedia:', err);
-      }
-    }
-
-    // Daftar Teks Roasting Berdasarkan Persentase HP
-    function getRoastMessage(percent) {
-      if (percent >= 80) {
-        return "Sultan baru gajian! Tapi ingat, ini baru awal bulan. Jangan sok kaya dulu.";
-      } else if (percent >= 50) {
-        return "HP dompet mulai berkurang. Kurang-kurangin nongkrong ngopi estetiknya ya!";
-      } else if (percent >= 25) {
-        return "WARNING! Nyawa dompet sekarat! Siap-siap makan mie instan campur nasi sampai akhir bulan.";
-      } else if (percent > 0) {
-        return "CRITICAL CONDITION! Tinggal satu pukulan lagi kamu langsung broke! Jangan berani-berani lirik promo online shop!";
-      } else {
-        return "GAME OVER! Dompetmu resmi almarhum bulan ini. Silakan merenung di pojokan.";
-      }
-    }
-
-    // Format Rupiah
-    function formatRupiah(number) {
-      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number);
-    }
-
-    // Load Data dari LocalStorage
-    function loadData() {
-      const savedState = localStorage.getItem('rpg_budget_data');
-      if (savedState) {
-        const parsed = JSON.parse(savedState);
-        // Kompatibilitas data lama yang belum punya field category
-        parsed.history = (parsed.history || []).map(item => ({
-          category: 'lainnya',
-          ...item
-        }));
-        state = parsed;
-        renderGame();
-      }
-    }
-
-    // Save Data ke LocalStorage
+    // Save Data
     function saveData() {
-      localStorage.setItem('rpg_budget_data', JSON.stringify(state));
+      localStorage.setItem('kampus_find_posts', JSON.stringify(posts));
     }
 
-    // Render segmented HP bar (20 kotak, mirip life bar Mega Man)
-    function renderHpSegments(percent) {
-      const totalSegments = 20;
-      const filledCount = Math.round((percent / 100) * totalSegments);
-      let colorClass = 'filled-green';
-      if (percent <= 50) colorClass = 'filled-amber';
-      if (percent <= 25) colorClass = 'filled-red';
+    // Format Nomor WA ke format Internasional (62)
+    function formatWaNumber(wa) {
+      let cleaned = wa.replace(/\D/g, '');
+      if (cleaned.startsWith('0')) {
+        cleaned = '62' + cleaned.slice(1);
+      }
+      return cleaned;
+    }
 
-      hpSegments.innerHTML = '';
-      hpSegments.classList.toggle('low-hp', percent <= 25);
-      for (let i = 0; i < totalSegments; i++) {
-        const seg = document.createElement('div');
-        seg.className = 'hp-seg' + (i < filledCount ? ` ${colorClass}` : '');
-        hpSegments.appendChild(seg);
+    // Badge Style & Label Generator
+    function getBadge(type) {
+      switch(type) {
+        case 'hilang': return `<span class="bg-rose-500/20 text-rose-400 border border-rose-500/40 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">🔴 Barang Hilang</span>`;
+        case 'ditemukan': return `<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">🟢 Barang Ditemukan</span>`;
+        case 'nebeng_tebangan': return `<span class="bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">🚗 Ada Tebangan</span>`;
+        case 'nebeng_cari': return `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/40 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">🙋‍♂️ Cari Tebangan</span>`;
       }
     }
 
-    // Update UI Game
-    function renderGame() {
-      if (state.maxHp <= 0) {
-        setupSection.classList.remove('hidden');
-        gameSection.classList.add('hidden');
-        return;
-      }
+    // Render Cards
+    function renderPosts() {
+      postsGrid.innerHTML = '';
+      
+      const search = searchInput.value.toLowerCase();
+      const cat = filterCategory.value;
 
-      setupSection.classList.add('hidden');
-      gameSection.classList.remove('hidden');
+      const filtered = posts.filter(item => {
+        // Filter Berdasarkan Tab Aktif
+        const matchTab = currentTab === 'lost_found' 
+          ? (item.type === 'hilang' || item.type === 'ditemukan')
+          : (item.type === 'nebeng_tebangan' || item.type === 'nebeng_cari');
 
-      // Hitung Persentase HP
-      const percent = Math.max(0, Math.min(100, Math.round((state.currentHp / state.maxHp) * 100)));
+        // Filter Search & Category
+        const matchSearch = item.title.toLowerCase().includes(search) || 
+                            item.location.toLowerCase().includes(search) || 
+                            item.desc.toLowerCase().includes(search);
+        const matchCat = (cat === 'semua') || (item.type === cat);
 
-      // Update Text & Segmented Bar
-      hpText.textContent = `${formatRupiah(state.currentHp)} / ${formatRupiah(state.maxHp)}`;
-      renderHpSegments(percent);
-
-      // Update Teks Roasting
-      roastText.textContent = `"${getRoastMessage(percent)}"`;
-
-      renderHistory();
-    }
-
-    // Render Riwayat Pengeluaran (menghormati filter kategori aktif)
-    function renderHistory() {
-      historyList.innerHTML = '';
-
-      const filtered = activeFilter === 'semua'
-        ? state.history
-        : state.history.filter(item => item.category === activeFilter);
+        return matchTab && matchSearch && matchCat;
+      });
 
       if (filtered.length === 0) {
-        historyList.innerHTML = `<li class="text-sm text-slate-500 italic">Belum ada damage terdeteksi.</li>`;
+        postsGrid.innerHTML = `
+          <div class="col-span-full text-center py-12 bg-slate-900/40 rounded-2xl border border-slate-800/80">
+            <span class="text-4xl block mb-2">📭</span>
+            <p class="text-slate-400 text-sm font-semibold">Belum ada postingan di kategori ini.</p>
+          </div>
+        `;
         return;
       }
 
-      filtered.slice().reverse().forEach(item => {
-        const li = document.createElement('li');
-        li.className = "flex justify-between items-center bg-slate-900 p-2 pixel-chip text-sm";
-        const label = CATEGORY_LABEL[item.category] || CATEGORY_LABEL.lainnya;
-        li.innerHTML = `
-          <span class="text-slate-300 font-medium">${label} · ${item.name}</span>
-          <span class="text-rose-400 font-bold">-${formatRupiah(item.amount)}</span>
+      filtered.forEach(item => {
+        const waClean = formatWaNumber(item.wa);
+        const waText = encodeURIComponent(`Halo, saya lihat postingan kamu di KampusFind mengenai: "${item.title}". Apakah masih ada/tersedia?`);
+        const waUrl = `https://wa.me/${waClean}?text=${waText}`;
+
+        const card = document.createElement('div');
+        card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between hover:border-slate-700 transition shadow-xl space-y-3";
+        
+        const defaultImg = 'https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?w=500&auto=format&fit=crop&q=60';
+        const imgUrl = item.img && item.img.trim() !== '' ? item.img : defaultImg;
+
+        card.innerHTML = `
+          <div>
+            <div class="flex justify-between items-start mb-2 gap-2">
+              ${getBadge(item.type)}
+              <span class="text-[10px] text-slate-500 font-medium">${item.date}</span>
+            </div>
+            
+            ${item.type.includes('hilang') || item.type.includes('ditemukan') ? `
+              <img src="${imgUrl}" alt="${item.title}" class="w-full h-36 object-cover rounded-xl mb-3 border border-slate-800">
+            ` : ''}
+
+            <h3 class="font-bold text-base text-white leading-snug">${item.title}</h3>
+            <p class="text-xs text-cyan-400/90 font-medium mt-1 flex items-center gap-1">
+              <span>📍</span> ${item.location}
+            </p>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/50">
+              ${item.desc}
+            </p>
+          </div>
+
+          <div class="pt-2 border-t border-slate-800/80 flex gap-2">
+            <a href="${waUrl}" target="_blank" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded-xl text-center transition flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/20">
+              <span>💬</span> Hubungi via WA
+            </a>
+            <button onclick="deletePost(${item.id})" class="bg-slate-800 hover:bg-rose-950/50 text-slate-400 hover:text-rose-400 p-2.5 rounded-xl text-xs transition border border-slate-700" title="Hapus Posting">
+              🗑️
+            </button>
+          </div>
         `;
-        historyList.appendChild(li);
+        postsGrid.appendChild(card);
       });
     }
 
-    // Event Listeners
-    startBtn.addEventListener('click', () => {
-      const val = parseInt(maxHpInput.value);
-      if (isNaN(val) || val <= 0) {
-        alert("Masukkan nominal budget yang valid!");
-        return;
+    // Delete Post
+    window.deletePost = function(id) {
+      if (confirm("Hapus postingan ini?")) {
+        posts = posts.filter(p => p.id !== id);
+        saveData();
+        renderPosts();
       }
-      state.maxHp = val;
-      state.currentHp = val;
-      state.history = [];
-      saveData();
-      renderGame();
+    }
+
+    // Switch Tabs
+    tabLostFound.addEventListener('click', () => {
+      currentTab = 'lost_found';
+      tabLostFound.className = "tab-btn flex-1 py-2.5 rounded-xl text-center transition bg-cyan-500 text-slate-950 font-bold shadow";
+      tabNebeng.className = "tab-btn flex-1 py-2.5 rounded-xl text-center transition text-slate-400 hover:text-white";
+      renderPosts();
     });
 
-    expenseForm.addEventListener('submit', (e) => {
+    tabNebeng.addEventListener('click', () => {
+      currentTab = 'nebeng';
+      tabNebeng.className = "tab-btn flex-1 py-2.5 rounded-xl text-center transition bg-cyan-500 text-slate-950 font-bold shadow";
+      tabLostFound.className = "tab-btn flex-1 py-2.5 rounded-xl text-center transition text-slate-400 hover:text-white";
+      renderPosts();
+    });
+
+    // Form Event
+    postForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const name = expenseName.value.trim();
-      const amount = parseInt(expenseAmount.value);
-      const category = expenseCategory.value;
+      
+      const newPost = {
+        id: Date.now(),
+        type: document.getElementById('postType').value,
+        title: document.getElementById('postTitle').value.trim(),
+        location: document.getElementById('postLocation').value.trim(),
+        desc: document.getElementById('postDesc').value.trim(),
+        wa: document.getElementById('postWa').value.trim(),
+        img: document.getElementById('postImg').value.trim(),
+        date: 'Baru saja',
+        status: 'aktif'
+      };
 
-      if (!name || isNaN(amount) || amount <= 0) return;
-
-      state.currentHp -= amount;
-      state.history.push({ name, amount, category });
+      posts.unshift(newPost);
       saveData();
-      renderGame();
-      playHitSound();
-
-      // Efek shake ringan pada panel HP saat kena damage
-      const hpPanel = hpSegments.closest('.pixel-panel');
-      hpPanel.classList.remove('shake');
-      void hpPanel.offsetWidth; // reflow supaya animasi bisa diulang
-      hpPanel.classList.add('shake');
-
-      expenseName.value = '';
-      expenseAmount.value = '';
-      expenseName.focus();
+      renderPosts();
+      
+      postForm.reset();
+      modalForm.classList.add('hidden');
     });
 
-    filterChips.forEach(chip => {
-      chip.addEventListener('click', () => {
-        activeFilter = chip.dataset.filter;
-        filterChips.forEach(c => c.classList.remove('active-chip'));
-        chip.classList.add('active-chip');
-        renderHistory();
-      });
-    });
+    // Modal Control
+    openModalBtn.addEventListener('click', () => modalForm.classList.remove('hidden'));
+    closeModalBtn.addEventListener('click', () => modalForm.classList.add('hidden'));
 
-    resetBtn.addEventListener('click', () => {
-      if (confirm("Yakin mau reset game? Seluruh data pengeluaran bulan ini akan dihapus.")) {
-        localStorage.removeItem('rpg_budget_data');
-        state = { maxHp: 0, currentHp: 0, history: [] };
-        activeFilter = 'semua';
-        maxHpInput.value = '';
-        renderGame();
-      }
-    });
+    // Filter Listeners
+    searchInput.addEventListener('input', renderPosts);
+    filterCategory.addEventListener('change', renderPosts);
 
-    // Inisialisasi saat halaman dimuat
-    loadData();
+    // Initial Render
+    renderPosts();
   </script>
 </body>
 </html>
