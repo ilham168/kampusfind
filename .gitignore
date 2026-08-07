@@ -1,4 +1,4 @@
-# Jangan pernah commit secret key / service role key ke repo
+
 .env
 .env.local
 *.env
