@@ -1,22 +1,24 @@
-/* ============================================================
-   KampusFind — Authentication (register, login, logout)
-   ============================================================ */
+// DOM refs
+const authScreen = document.getElementById('auth-screen');
+const appScreen = document.getElementById('app-screen');
+const loginForm = document.getElementById('login-form');
+const registerForm = document.getElementById('register-form');
+const navUsername = document.getElementById('nav-username');
 
-// --- Auth UI switch (login <-> register) ---
+// ---------- Auth UI switch ----------
 document.getElementById('to-register').addEventListener('click', () => {
-  document.getElementById('login-form').classList.add('hidden');
-  document.getElementById('register-form').classList.remove('hidden');
+  loginForm.classList.add('hidden');
+  registerForm.classList.remove('hidden');
   setAuthError('');
 });
-
 document.getElementById('to-login').addEventListener('click', () => {
-  document.getElementById('register-form').classList.add('hidden');
-  document.getElementById('login-form').classList.remove('hidden');
+  registerForm.classList.add('hidden');
+  loginForm.classList.remove('hidden');
   setAuthError('');
 });
 
-// --- Register ---
-document.getElementById('register-form').addEventListener('submit', async (e) => {
+// ---------- Register ----------
+registerForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   setAuthError('');
   setAuthLoading(true);
@@ -26,14 +28,27 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
   const password = document.getElementById('reg-password').value;
 
   try {
-    const cred = await auth.createUserWithEmailAndPassword(email, password);
-    await cred.user.updateProfile({ displayName: name });
-    await db.collection('users').doc(cred.user.uid).set({
-      name: name,
-      email: email,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { full_name: name } }
     });
-    showToast('Pendaftaran berhasil!');
+    if (error) throw error;
+
+    if (data.user) {
+      const { error: perr } = await supabase
+        .from('users')
+        .upsert({ id: data.user.id, name, email }, { onConflict: 'id' });
+      if (perr) console.error('Gagal simpan profil:', perr.message);
+    }
+
+    if (data.session) {
+      showToast('Pendaftaran berhasil!');
+    } else {
+      showToast('Cek email kamu untuk verifikasi, lalu login.');
+      registerForm.classList.add('hidden');
+      loginForm.classList.remove('hidden');
+    }
   } catch (err) {
     setAuthError(mapAuthError(err));
   } finally {
@@ -41,8 +56,8 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
   }
 });
 
-// --- Login ---
-document.getElementById('login-form').addEventListener('submit', async (e) => {
+// ---------- Login ----------
+loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   setAuthError('');
   setAuthLoading(true);
@@ -51,7 +66,15 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
   const password = document.getElementById('login-password').value;
 
   try {
-    await auth.signInWithEmailAndPassword(email, password);
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+
+    const name = data.user.user_metadata?.full_name || email.split('@')[0] || 'User';
+    const { error: perr } = await supabase
+      .from('users')
+      .upsert({ id: data.user.id, name, email: data.user.email }, { onConflict: 'id' });
+    if (perr) console.error('Gagal simpan profil:', perr.message);
+
     showToast('Login berhasil!');
   } catch (err) {
     setAuthError(mapAuthError(err));
@@ -60,12 +83,42 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
   }
 });
 
-// --- Logout ---
+// ---------- Logout ----------
 document.getElementById('logout-btn').addEventListener('click', async () => {
   try {
-    await auth.signOut();
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
     showToast('Berhasil logout.');
   } catch (err) {
     alert('Gagal logout: ' + err.message);
+  }
+});
+
+// ---------- Auth Observer ----------
+supabase.auth.onAuthStateChange(async (_event, session) => {
+  const user = session?.user;
+  if (user) {
+    const name = user.user_metadata?.full_name || user.email.split('@')[0] || 'User';
+    currentUser = { uid: user.id, email: user.email, name, role: 'user' };
+
+    // Ambil role dari tabel users (default 'user' jika belum ada).
+    const { data } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle();
+    if (data && data.role) currentUser.role = data.role;
+
+    navUsername.textContent = name;
+    authScreen.classList.add('hidden-strict');
+    appScreen.classList.remove('hidden-strict');
+
+    updateAdminAccess();
+    initRealtimeListeners();
+  } else {
+    currentUser = null;
+    if (supabaseChannel) supabaseChannel.unsubscribe();
+    appScreen.classList.add('hidden-strict');
+    authScreen.classList.remove('hidden-strict');
   }
 });

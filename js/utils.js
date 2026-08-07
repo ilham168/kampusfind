@@ -1,7 +1,10 @@
-/* ============================================================
-   KampusFind — Utility Helpers
-   ============================================================ */
+// ---------- State Global ----------
+let currentUser = null; // { uid, email, name }
+let lfPosts = [];
+let nbPosts = [];
+let supabaseChannel = null;
 
+// ---------- Utils ----------
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -11,14 +14,14 @@ function showToast(msg) {
 }
 
 function setAuthError(msg) {
-  const el = document.getElementById('auth-error');
+  const authError = document.getElementById('auth-error');
   if (!msg) {
-    el.classList.add('hidden');
-    el.textContent = '';
+    authError.classList.add('hidden');
+    authError.textContent = '';
     return;
   }
-  el.textContent = msg;
-  el.classList.remove('hidden');
+  authError.textContent = msg;
+  authError.classList.remove('hidden');
 }
 
 function setAuthLoading(on) {
@@ -29,17 +32,26 @@ function setAuthLoading(on) {
 
 function mapAuthError(err) {
   const code = err && err.code ? err.code : '';
+  const status = err && err.status ? err.status : '';
+  const msg = err && err.message ? err.message.toLowerCase() : '';
   const map = {
-    'auth/email-already-in-use': 'Email sudah terdaftar.',
-    'auth/invalid-email': 'Format email tidak valid.',
-    'auth/weak-password': 'Password terlalu lemah (min. 6 karakter).',
-    'auth/user-not-found': 'Akun tidak ditemukan.',
-    'auth/wrong-password': 'Password salah.',
-    'auth/invalid-credential': 'Email atau password salah.',
-    'auth/too-many-requests': 'Terlalu banyak percobaan. Coba lagi nanti.',
-    'auth/network-request-failed': 'Gagal jaringan. Periksa koneksi Anda.'
+    'user_already_exists': 'Email sudah terdaftar.',
+    'email_exists': 'Email sudah terdaftar.',
+    'invalid_credentials': 'Email atau password salah.',
+    'invalid_email': 'Format email tidak valid.',
+    'email_not_confirmed': 'Email belum diverifikasi. Cek inbox kamu.',
+    'weak_password': 'Password terlalu lemah (min. 6 karakter).',
+    'over_request_rate_limit': 'Terlalu banyak percobaan. Coba lagi nanti.',
+    'validation_failed': 'Format email tidak valid.'
   };
-  return map[code] || (err.message || 'Terjadi kesalahan autentikasi.');
+  if (map[code]) return map[code];
+  if (msg.includes('already registered')) return 'Email sudah terdaftar.';
+  if (msg.includes('invalid login credentials')) return 'Email atau password salah.';
+  if (msg.includes('weak password')) return 'Password terlalu lemah (min. 6 karakter).';
+  if (msg.includes('email not confirmed')) return 'Email belum diverifikasi. Cek inbox kamu.';
+  if (msg.includes('network') || msg.includes('fetch failed')) return 'Gagal jaringan. Periksa koneksi Anda.';
+  if (status === 429) return 'Terlalu banyak percobaan. Coba lagi nanti.';
+  return err.message || 'Terjadi kesalahan autentikasi.';
 }
 
 function escapeHtml(str) {
@@ -62,3 +74,34 @@ function formatTime(ts) {
     return '-';
   }
 }
+
+// Ubah "08xxxxxxxxxx" -> "628xxxxxxxxxx", selain itu tetap di-format ke nomor internasional.
+function formatWAUrl(phone) {
+  if (!phone) return '#';
+  let cleaned = String(phone).replace(/\D/g, '');
+  if (cleaned.startsWith('0')) cleaned = '62' + cleaned.slice(1);
+  return `https://wa.me/${cleaned}`;
+}
+
+// ---------- Modal Konfirmasi Hapus ----------
+let deleteModalOnConfirm = null;
+
+function openDeleteModal(message, onConfirm) {
+  const msgEl = document.getElementById('delete-modal-msg');
+  if (msgEl && message) msgEl.textContent = message;
+  deleteModalOnConfirm = onConfirm;
+  document.getElementById('delete-modal').classList.remove('hidden');
+}
+
+function closeDeleteModal() {
+  deleteModalOnConfirm = null;
+  document.getElementById('delete-modal').classList.add('hidden');
+}
+
+document.getElementById('modal-cancel-btn').addEventListener('click', closeDeleteModal);
+
+document.getElementById('modal-confirm-btn').addEventListener('click', async () => {
+  const cb = deleteModalOnConfirm;
+  closeDeleteModal();
+  if (cb) await cb();
+});

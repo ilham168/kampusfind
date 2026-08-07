@@ -1,0 +1,8 @@
+# Jangan pernah commit secret key / service role key ke repo
+.env
+.env.local
+*.env
+supabase-secret.json
+
+.DS_Store
+.vscode/
