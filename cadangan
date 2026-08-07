@@ -12,12 +12,11 @@
         extend: {
           fontFamily: { sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'] },
           colors: {
-            deep: '#2563eb',
-            electric: '#0052ff',
-            panel: '#ffffff',
-            panel2: '#f8fafc',
-            cyanx: '#0284c7',
-            emx: '#10b981',
+            deep: '#0b132b',
+            panel: '#1c2541',
+            panel2: '#243b55',
+            cyanx: '#00d4ff',
+            emx: '#34d399',
           }
         }
       }
@@ -29,43 +28,38 @@
 
   <style>
     html, body { height: 100%; }
-    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: #f8fafc; color: #0f172a; }
+    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: #0b132b; }
 
     .glass {
-      background: rgba(255, 255, 255, 0.95);
-      border: 1px solid rgba(226, 232, 240, 0.9);
+      background: linear-gradient(180deg, rgba(28,37,65,.92), rgba(28,37,65,.78));
+      border: 1px solid rgba(148,163,184,.14);
       backdrop-filter: blur(12px);
-      box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.06), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
     }
-    .glow-cyan { box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.12), 0 12px 35px rgba(37, 99, 235, 0.08); }
-    .glow-em { box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.12), 0 12px 35px rgba(16, 185, 129, 0.08); }
+    .glow-cyan { box-shadow: 0 0 0 1px rgba(0,212,255,.15), 0 10px 40px rgba(0,212,255,.08); }
+    .glow-em { box-shadow: 0 0 0 1px rgba(52,211,153,.15), 0 10px 40px rgba(52,211,153,.08); }
 
     .input-dark {
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      color: #0f172a;
+      background: rgba(11,19,43,.65);
+      border: 1px solid rgba(148,163,184,.18);
     }
     .input-dark:focus {
       outline: none;
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      border-color: rgba(0,212,255,.55);
+      box-shadow: 0 0 0 3px rgba(0,212,255,.12);
     }
 
     .tab-active {
-      background: #2563eb !important;
-      color: #ffffff !important;
-      border-color: #2563eb;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+      background: linear-gradient(135deg, rgba(0,212,255,.18), rgba(52,211,153,.12));
+      border-color: rgba(0,212,255,.35);
+      color: #e2e8f0;
     }
 
-    .badge-lost { background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; }
-    .badge-found { background: #ecfdf5; color: #10b981; border: 1px solid #a7f3d0; }
-    .badge-nebeng { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
-    .badge-open { background: #ecfdf5; color: #10b981; border: 1px solid #a7f3d0; }
-    .badge-full { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+    .badge-lost { background: rgba(248,113,113,.15); color: #fca5a5; border: 1px solid rgba(248,113,113,.25); }
+    .badge-found { background: rgba(52,211,153,.15); color: #6ee7b7; border: 1px solid rgba(52,211,153,.25); }
+    .badge-nebeng { background: rgba(0,212,255,.12); color: #67e8f9; border: 1px solid rgba(0,212,255,.25); }
 
     .scroll-thin::-webkit-scrollbar { width: 8px; height: 8px; }
-    .scroll-thin::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 999px; }
+    .scroll-thin::-webkit-scrollbar-thumb { background: rgba(148,163,184,.25); border-radius: 999px; }
 
     .fade-in { animation: fadeIn .35s ease both; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
@@ -73,95 +67,95 @@
     .hidden-strict { display: none !important; }
   </style>
 </head>
-<body class="h-full text-slate-800 antialiased bg-slate-50">
+<body class="h-full text-slate-200 antialiased">
   <!-- ===================== AUTH GATE ===================== -->
-  <div id="auth-screen" class="min-h-full flex items-center justify-center p-4 relative overflow-hidden bg-slate-50">
+  <div id="auth-screen" class="min-h-full flex items-center justify-center p-4 relative overflow-hidden">
     <div class="pointer-events-none absolute inset-0">
-      <div class="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-blue-500/10 blur-3xl"></div>
-      <div class="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-cyan-400/10 blur-3xl"></div>
+      <div class="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-cyan-400/10 blur-3xl"></div>
+      <div class="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-emerald-400/10 blur-3xl"></div>
     </div>
 
-    <div class="w-full max-w-md glass rounded-3xl p-6 sm:p-8 glow-cyan relative z-10 fade-in bg-white/90">
+    <div class="w-full max-w-md glass rounded-3xl p-6 sm:p-8 glow-cyan relative z-10 fade-in">
       <div class="text-center mb-7">
-        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-50 border border-blue-200 mb-4 shadow-sm">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-400/20 to-emerald-400/20 border border-cyan-300/20 mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-cyan-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18z" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M8.5 12.5l2.2 2.2L15.8 9.6" />
           </svg>
         </div>
-        <h1 class="text-2xl font-extrabold tracking-tight text-slate-900">KampusFind</h1>
-        <p class="text-sm text-slate-500 mt-1">Lost & Found + Board Nebeng kampus</p>
+        <h1 class="text-2xl font-extrabold tracking-tight text-white">KampusFind</h1>
+        <p class="text-sm text-slate-400 mt-1">Lost & Found + Board Nebeng kampus</p>
       </div>
 
       <!-- LOGIN FORM -->
       <form id="login-form" class="space-y-4">
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1.5">Email Kampus</label>
-          <input id="login-email" type="email" required placeholder="nama@kampus.ac.id" class="input-dark w-full rounded-xl px-4 py-3 text-sm placeholder:text-slate-400" />
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Email Kampus</label>
+          <input id="login-email" type="email" required placeholder="nama@kampus.ac.id" class="input-dark w-full rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-500" />
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1.5">Password</label>
-          <input id="login-password" type="password" required minlength="6" placeholder="Masukkan password" class="input-dark w-full rounded-xl px-4 py-3 text-sm placeholder:text-slate-400" />
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Password</label>
+          <input id="login-password" type="password" required minlength="6" placeholder="Masukkan password" class="input-dark w-full rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-500" />
         </div>
-        <button type="submit" id="login-btn" class="w-full rounded-xl py-3 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/25 transition active:scale-[.99]">
+        <button type="submit" id="login-btn" class="w-full rounded-xl py-3 text-sm font-bold text-deep bg-gradient-to-r from-cyan-300 to-emerald-300 hover:opacity-95 transition active:scale-[.99]">
           Masuk
         </button>
-        <p class="text-center text-sm text-slate-500 pt-1">
+        <p class="text-center text-sm text-slate-400 pt-1">
           Belum punya akun?
-          <button type="button" id="to-register" class="text-blue-600 font-semibold hover:underline">Daftar</button>
+          <button type="button" id="to-register" class="text-cyan-300 font-semibold hover:underline">Daftar</button>
         </p>
       </form>
 
       <!-- REGISTER FORM -->
       <form id="register-form" class="space-y-4 hidden">
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1.5">Nama Lengkap</label>
-          <input id="reg-name" type="text" required placeholder="Nama lengkap" class="input-dark w-full rounded-xl px-4 py-3 text-sm placeholder:text-slate-400" />
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Nama Lengkap</label>
+          <input id="reg-name" type="text" required placeholder="Nama lengkap" class="input-dark w-full rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-500" />
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1.5">NIM</label>
-          <input id="reg-nim" type="text" required placeholder="Contoh: 2200018001" class="input-dark w-full rounded-xl px-4 py-3 text-sm placeholder:text-slate-400" />
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">NIM</label>
+          <input id="reg-nim" type="text" required placeholder="Contoh: 2200018001" class="input-dark w-full rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-500" />
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1.5">Email Kampus</label>
-          <input id="reg-email" type="email" required placeholder="nama@kampus.ac.id" class="input-dark w-full rounded-xl px-4 py-3 text-sm placeholder:text-slate-400" />
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Email Kampus</label>
+          <input id="reg-email" type="email" required placeholder="nama@kampus.ac.id" class="input-dark w-full rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-500" />
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1.5">Password</label>
-          <input id="reg-password" type="password" required minlength="6" placeholder="Minimal 6 karakter" class="input-dark w-full rounded-xl px-4 py-3 text-sm placeholder:text-slate-400" />
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Password</label>
+          <input id="reg-password" type="password" required minlength="6" placeholder="Minimal 6 karakter" class="input-dark w-full rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-500" />
         </div>
-        <button type="submit" id="register-btn" class="w-full rounded-xl py-3 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/25 transition active:scale-[.99]">
+        <button type="submit" id="register-btn" class="w-full rounded-xl py-3 text-sm font-bold text-deep bg-gradient-to-r from-emerald-300 to-cyan-300 hover:opacity-95 transition active:scale-[.99]">
           Buat Akun
         </button>
-        <p class="text-center text-sm text-slate-500 pt-1">
+        <p class="text-center text-sm text-slate-400 pt-1">
           Sudah punya akun?
-          <button type="button" id="to-login" class="text-blue-600 font-semibold hover:underline">Login</button>
+          <button type="button" id="to-login" class="text-emerald-300 font-semibold hover:underline">Login</button>
         </p>
       </form>
 
-      <div id="auth-error" class="hidden mt-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-3 py-2"></div>
-      <div id="auth-loading" class="hidden mt-4 text-center text-xs text-slate-500">Memproses...</div>
+      <div id="auth-error" class="hidden mt-4 text-sm text-red-300 bg-red-500/10 border border-red-400/20 rounded-xl px-3 py-2"></div>
+      <div id="auth-loading" class="hidden mt-4 text-center text-xs text-slate-400">Memproses...</div>
     </div>
   </div>
 
   <!-- ===================== MAIN APP ===================== -->
   <div id="app-screen" class="hidden-strict min-h-full flex flex-col">
     <!-- NAVBAR -->
-    <header class="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur-md shadow-sm">
+    <header class="sticky top-0 z-40 border-b border-slate-700/50 bg-[#0b132b]/90 backdrop-blur-md">
       <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
         <button id="nav-profile-btn" onclick="openMyProfile()" class="flex items-center gap-3 min-w-0 text-left hover:opacity-80 transition group">
-          <div class="w-9 h-9 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center shrink-0 group-hover:border-blue-400">
-            <span id="nav-avatar-initial" class="text-blue-600 font-extrabold text-sm">KF</span>
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400/25 to-emerald-400/20 border border-cyan-300/30 flex items-center justify-center shrink-0 group-hover:border-cyan-300/60">
+            <span id="nav-avatar-initial" class="text-cyan-300 font-extrabold text-sm">KF</span>
           </div>
           <div class="min-w-0">
-            <h1 class="text-base sm:text-lg font-extrabold text-slate-900 leading-tight flex items-center gap-1.5">
+            <h1 class="text-base sm:text-lg font-extrabold text-white leading-tight flex items-center gap-1.5">
               KampusFind
             </h1>
-            <p class="text-[11px] text-slate-500 truncate">Halo, <span id="nav-username" class="text-blue-600 font-bold">User</span></p>
+            <p class="text-[11px] text-slate-400 truncate">Halo, <span id="nav-username" class="text-cyan-300 font-semibold">User</span></p>
           </div>
         </button>
 
-        <button id="logout-btn" class="shrink-0 rounded-xl px-3.5 py-2 text-xs font-bold border border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+        <button id="logout-btn" class="shrink-0 rounded-xl px-3.5 py-2 text-xs font-bold border border-slate-600/80 bg-panel hover:bg-panel2 text-slate-200 transition">
           Logout
         </button>
       </div>
@@ -169,15 +163,12 @@
 
     <!-- TABS -->
     <div class="max-w-6xl mx-auto w-full px-4 pt-5">
-      <div class="flex gap-2 p-1 rounded-2xl bg-slate-200/60 border border-slate-300/50">
-        <button id="tab-lostfound" class="tab-btn tab-active flex-1 rounded-xl px-3 py-2.5 text-sm font-bold border border-transparent transition">
+      <div class="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-panel/70 border border-slate-700/50">
+        <button id="tab-lostfound" class="tab-btn tab-active rounded-xl px-3 py-2.5 text-sm font-bold border border-transparent transition">
           Lost & Found
         </button>
-        <button id="tab-nebeng" class="tab-btn flex-1 rounded-xl px-3 py-2.5 text-sm font-bold border border-transparent text-slate-600 hover:text-slate-900 transition">
+        <button id="tab-nebeng" class="tab-btn rounded-xl px-3 py-2.5 text-sm font-bold border border-transparent text-slate-400 hover:text-slate-200 transition">
           Nebeng Kampus
-        </button>
-        <button id="tab-admin" class="tab-btn hidden-strict flex-1 rounded-xl px-3 py-2.5 text-sm font-bold border border-transparent text-slate-600 hover:text-slate-900 transition">
-          Admin Panel
         </button>
       </div>
     </div>
@@ -187,38 +178,33 @@
       <section id="panel-lostfound" class="fade-in">
         <div class="grid lg:grid-cols-5 gap-5">
           <div class="lg:col-span-2 glass rounded-2xl p-5 glow-cyan h-fit">
-            <h2 class="text-lg font-bold text-slate-900 mb-1">Buat Postingan</h2>
-            <p class="text-xs text-slate-500 mb-4">Laporkan barang hilang atau ditemukan.</p>
+            <h2 class="text-lg font-bold text-white mb-1">Buat Postingan</h2>
+            <p class="text-xs text-slate-400 mb-4">Laporkan barang hilang atau ditemukan.</p>
             <form id="lf-form" class="space-y-3">
               <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Jenis</label>
-                <select id="lf-type" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm">
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Jenis</label>
+                <select id="lf-type" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white">
                   <option value="lost">Hilang</option>
                   <option value="found">Ditemukan</option>
                 </select>
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Judul Barang</label>
-                <input id="lf-title" required maxlength="80" placeholder="Contoh: Dompet hitam" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400" />
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Judul Barang</label>
+                <input id="lf-title" required maxlength="80" placeholder="Contoh: Dompet hitam" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500" />
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Lokasi</label>
-                <input id="lf-location" required maxlength="80" placeholder="Contoh: Gedung T3.3" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400" />
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Lokasi</label>
+                <input id="lf-location" required maxlength="80" placeholder="Contoh: Gedung T3.3" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500" />
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Deskripsi</label>
-                <textarea id="lf-desc" required rows="3" maxlength="400" placeholder="Ciri-ciri barang" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400 resize-y"></textarea>
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Deskripsi</label>
+                <textarea id="lf-desc" required rows="3" maxlength="400" placeholder="Ciri-ciri barang" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500 resize-y"></textarea>
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Kontak (No WA)</label>
-                <input id="lf-contact" required maxlength="60" placeholder="08123456789" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400" />
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Kontak (No WA)</label>
+                <input id="lf-contact" required maxlength="60" placeholder="08123456789" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500" />
               </div>
-              <!-- FITUR UNGGAN FOTO -->
-              <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Foto Barang (Opsional)</label>
-                <input id="lf-image" type="file" accept="image/*" class="input-dark w-full rounded-xl px-3 py-2 text-xs text-slate-600 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-600 hover:file:bg-blue-100 cursor-pointer" />
-              </div>
-              <button type="submit" id="lf-submit-btn" class="w-full rounded-xl py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/20 transition">
+              <button type="submit" id="lf-submit-btn" class="w-full rounded-xl py-2.5 text-sm font-bold text-deep bg-gradient-to-r from-cyan-300 to-emerald-300 hover:opacity-95 transition">
                 Publikasikan
               </button>
             </form>
@@ -227,19 +213,19 @@
           <div class="lg:col-span-3">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
               <div>
-                <h2 class="text-lg font-bold text-slate-900">Feed Lost & Found</h2>
+                <h2 class="text-lg font-bold text-white">Feed Lost & Found</h2>
               </div>
               <div class="flex gap-2">
-                <select id="lf-filter" class="input-dark rounded-xl px-3 py-2 text-xs">
+                <select id="lf-filter" class="input-dark rounded-xl px-3 py-2 text-xs text-white">
                   <option value="all">Semua</option>
                   <option value="lost">Hilang</option>
                   <option value="found">Ditemukan</option>
                 </select>
-                <input id="lf-search" type="search" placeholder="Cari..." class="input-dark rounded-xl px-3 py-2 text-xs placeholder:text-slate-400 w-36 sm:w-44" />
+                <input id="lf-search" type="search" placeholder="Cari..." class="input-dark rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-500 w-36 sm:w-44" />
               </div>
             </div>
             <div id="lf-list" class="space-y-3 scroll-thin"></div>
-            <div id="lf-empty" class="hidden text-center py-16 text-slate-400 text-sm">Belum ada postingan Lost & Found.</div>
+            <div id="lf-empty" class="hidden text-center py-16 text-slate-500 text-sm">Belum ada postingan Lost & Found.</div>
           </div>
         </div>
       </section>
@@ -248,49 +234,45 @@
       <section id="panel-nebeng" class="hidden fade-in">
         <div class="grid lg:grid-cols-5 gap-5">
           <div class="lg:col-span-2 glass rounded-2xl p-5 glow-em h-fit">
-            <h2 class="text-lg font-bold text-slate-900 mb-1">Posting Nebeng</h2>
-            <p class="text-xs text-slate-500 mb-4">Tawarkan atau cari tumpangan.</p>
+            <h2 class="text-lg font-bold text-white mb-1">Posting Nebeng</h2>
+            <p class="text-xs text-slate-400 mb-4">Tawarkan atau cari tumpangan.</p>
             <form id="nb-form" class="space-y-3">
               <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Tipe</label>
-                <select id="nb-type" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm">
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Tipe</label>
+                <select id="nb-type" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white">
                   <option value="offer">Nawarin tumpangan</option>
                   <option value="need">Cari tumpangan</option>
                 </select>
               </div>
               <div class="grid grid-cols-2 gap-3">
                 <div>
-                  <label class="block text-xs font-semibold text-slate-600 mb-1">Dari</label>
-                  <input id="nb-from" required maxlength="50" placeholder="Asal" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400" />
+                  <label class="block text-xs font-semibold text-slate-400 mb-1">Dari</label>
+                  <input id="nb-from" required maxlength="50" placeholder="Asal" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500" />
                 </div>
                 <div>
-                  <label class="block text-xs font-semibold text-slate-600 mb-1">Ke</label>
-                  <input id="nb-to" required maxlength="50" placeholder="Tujuan" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400" />
+                  <label class="block text-xs font-semibold text-slate-400 mb-1">Ke</label>
+                  <input id="nb-to" required maxlength="50" placeholder="Tujuan" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500" />
                 </div>
-              </div>
-              <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Link Google Maps Route</label>
-                <input id="nb-maps" type="url" maxlength="300" placeholder="Opsional: https://maps.app.goo.gl/..." class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400" />
               </div>
               <div class="grid grid-cols-2 gap-3">
                 <div>
-                  <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal</label>
-                  <input id="nb-date" type="date" required class="input-dark w-full rounded-xl px-3 py-2.5 text-sm" />
+                  <label class="block text-xs font-semibold text-slate-400 mb-1">Tanggal</label>
+                  <input id="nb-date" type="date" required class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white" />
                 </div>
                 <div>
-                  <label class="block text-xs font-semibold text-slate-600 mb-1">Jam</label>
-                  <input id="nb-time" type="time" required class="input-dark w-full rounded-xl px-3 py-2.5 text-sm" />
+                  <label class="block text-xs font-semibold text-slate-400 mb-1">Jam</label>
+                  <input id="nb-time" type="time" required class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white" />
                 </div>
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Kursi / Catatan</label>
-                <input id="nb-note" maxlength="120" placeholder="Contoh: 2 kursi, lewat tol" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400" />
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Kursi / Catatan</label>
+                <input id="nb-note" maxlength="120" placeholder="Contoh: 2 kursi, lewat tol" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500" />
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Kontak (No WA)</label>
-                <input id="nb-contact" required maxlength="60" placeholder="08123456789" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400" />
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Kontak (No WA)</label>
+                <input id="nb-contact" required maxlength="60" placeholder="08123456789" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500" />
               </div>
-              <button type="submit" id="nb-submit-btn" class="w-full rounded-xl py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/20 transition">
+              <button type="submit" id="nb-submit-btn" class="w-full rounded-xl py-2.5 text-sm font-bold text-deep bg-gradient-to-r from-emerald-300 to-cyan-300 hover:opacity-95 transition">
                 Publikasikan
               </button>
             </form>
@@ -299,144 +281,80 @@
           <div class="lg:col-span-3">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
               <div>
-                <h2 class="text-lg font-bold text-slate-900">Nebeng Kampus</h2>
+                <h2 class="text-lg font-bold text-white">Nebeng Kampus</h2>
               </div>
               <div class="flex gap-2">
-                <select id="nb-filter" class="input-dark rounded-xl px-3 py-2 text-xs">
+                <select id="nb-filter" class="input-dark rounded-xl px-3 py-2 text-xs text-white">
                   <option value="all">Semua</option>
                   <option value="offer">Nawarin</option>
                   <option value="need">Cari</option>
                 </select>
-                <input id="nb-search" type="search" placeholder="Cari rute..." class="input-dark rounded-xl px-3 py-2 text-xs placeholder:text-slate-400 w-36 sm:w-44" />
+                <input id="nb-search" type="search" placeholder="Cari rute..." class="input-dark rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-500 w-36 sm:w-44" />
               </div>
             </div>
             <div id="nb-list" class="space-y-3"></div>
-            <div id="nb-empty" class="hidden text-center py-16 text-slate-400 text-sm">Belum ada postingan nebeng.</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ========== ADMIN PANEL ========== -->
-      <section id="panel-admin" class="hidden fade-in">
-        <div class="space-y-5">
-          <!-- Statistik -->
-          <div class="glass rounded-2xl p-5 glow-cyan">
-            <h2 class="text-lg font-bold text-slate-900 mb-1">Dasbor Admin</h2>
-            <p class="text-xs text-slate-500 mb-4">Kelola dan moderasi semua postingan di KampusFind.</p>
-            <div class="grid grid-cols-2 gap-3 max-w-md">
-              <div class="rounded-2xl p-4 bg-white border border-slate-200">
-                <p class="text-[11px] font-semibold text-slate-500">Total Lost &amp; Found</p>
-                <p id="admin-total-lf" class="text-3xl font-extrabold text-blue-600 mt-1">0</p>
-              </div>
-              <div class="rounded-2xl p-4 bg-white border border-slate-200">
-                <p class="text-[11px] font-semibold text-slate-500">Total Nebeng</p>
-                <p id="admin-total-nb" class="text-3xl font-extrabold text-emerald-600 mt-1">0</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Tabel Lost & Found -->
-          <div class="glass rounded-2xl p-5">
-            <h3 class="font-bold text-slate-900 mb-3">Semua Postingan Lost &amp; Found</h3>
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs">
-                <thead>
-                  <tr class="text-slate-500 border-b border-slate-200">
-                    <th class="py-2 pr-3">Judul</th>
-                    <th class="py-2 pr-3">Jenis</th>
-                    <th class="py-2 pr-3">Lokasi</th>
-                    <th class="py-2 pr-3">Oleh</th>
-                    <th class="py-2 pr-3">Tanggal</th>
-                    <th class="py-2 text-right">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody id="admin-lf-rows"></tbody>
-              </table>
-              <p id="admin-lf-empty" class="hidden text-center py-8 text-slate-500 text-xs">Belum ada data Lost &amp; Found.</p>
-            </div>
-          </div>
-
-          <!-- Tabel Nebeng -->
-          <div class="glass rounded-2xl p-5">
-            <h3 class="font-bold text-slate-900 mb-3">Semua Postingan Nebeng</h3>
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs">
-                <thead>
-                  <tr class="text-slate-500 border-b border-slate-200">
-                    <th class="py-2 pr-3">Rute</th>
-                    <th class="py-2 pr-3">Tipe</th>
-                    <th class="py-2 pr-3">Tanggal</th>
-                    <th class="py-2 pr-3">Oleh</th>
-                    <th class="py-2 pr-3">Kontak</th>
-                    <th class="py-2 pr-3">Status</th>
-                    <th class="py-2 text-right">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody id="admin-nb-rows"></tbody>
-              </table>
-              <p id="admin-nb-empty" class="hidden text-center py-8 text-slate-500 text-xs">Belum ada data Nebeng.</p>
-            </div>
+            <div id="nb-empty" class="hidden text-center py-16 text-slate-500 text-sm">Belum ada postingan nebeng.</div>
           </div>
         </div>
       </section>
     </main>
 
-    <footer class="border-t border-slate-200 py-4 text-center text-[11px] text-slate-400">
+    <footer class="border-t border-slate-800/80 py-4 text-center text-[11px] text-slate-500">
       KampusFind · Fidelia Ping + Ilham Risanjaya
     </footer>
   </div>
 
   <!-- ===================== MODAL PROFIL MAHASISWA ===================== -->
-  <div id="profile-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm fade-in">
-    <div class="w-full max-w-md glass bg-white rounded-3xl p-6 glow-cyan relative space-y-5 max-h-[90vh] overflow-y-auto scroll-thin">
-      <div class="flex items-start justify-between border-b border-slate-200 pb-4">
+  <div id="profile-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm fade-in">
+    <div class="w-full max-w-md glass rounded-3xl p-6 glow-cyan relative space-y-5 max-h-[90vh] overflow-y-auto scroll-thin">
+      <div class="flex items-start justify-between border-b border-slate-700/60 pb-4">
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center font-bold text-blue-600 text-lg" id="profile-avatar-icon">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400/30 to-emerald-400/20 border border-cyan-300/40 flex items-center justify-center font-bold text-cyan-300 text-lg" id="profile-avatar-icon">
             🎓
           </div>
           <div>
-            <h3 id="profile-modal-title" class="text-lg font-bold text-slate-900">Profil Mahasiswa</h3>
-            <p id="profile-modal-subtitle" class="text-xs text-slate-500">Biodata Lengkap</p>
+            <h3 id="profile-modal-title" class="text-lg font-bold text-white">Profil Mahasiswa</h3>
+            <p id="profile-modal-subtitle" class="text-xs text-slate-400">Biodata Lengkap</p>
           </div>
         </div>
-        <button onclick="closeProfileModal()" class="text-slate-400 hover:text-slate-700 p-1 rounded-lg hover:bg-slate-100 transition">
+        <button onclick="closeProfileModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition">
           ✕
         </button>
       </div>
 
       <!-- VIEW MODE -->
       <div id="profile-view-mode" class="space-y-4">
-        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3">
+        <div class="bg-panel/60 border border-slate-700/50 rounded-2xl p-4 space-y-3">
           <div>
             <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">Nama Lengkap</span>
-            <p id="view-prof-name" class="text-base font-bold text-slate-900 leading-tight">-</p>
-            <p id="view-prof-nim" class="text-xs font-semibold text-blue-600 font-mono mt-0.5">NIM: -</p>
+            <p id="view-prof-name" class="text-base font-bold text-white leading-tight">-</p>
+            <p id="view-prof-nim" class="text-xs font-semibold text-cyan-300 font-mono mt-0.5">NIM: -</p>
           </div>
-          <div class="grid grid-cols-2 gap-3 pt-2 border-t border-slate-200">
+          <div class="grid grid-cols-2 gap-3 pt-2 border-t border-slate-700/40">
             <div>
               <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">Program Studi</span>
-              <p id="view-prof-prodi" class="text-sm font-semibold text-blue-600">-</p>
+              <p id="view-prof-prodi" class="text-sm font-semibold text-cyan-300">-</p>
             </div>
             <div>
               <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">Angkatan</span>
-              <p id="view-prof-angkatan" class="text-sm font-semibold text-emerald-600">-</p>
+              <p id="view-prof-angkatan" class="text-sm font-semibold text-emerald-300">-</p>
             </div>
           </div>
-          <div class="pt-2 border-t border-slate-200">
+          <div class="pt-2 border-t border-slate-700/40">
             <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">Email Kampus</span>
-            <p id="view-prof-email" class="text-xs text-slate-600 font-mono">-</p>
+            <p id="view-prof-email" class="text-xs text-slate-300 font-mono">-</p>
           </div>
-          <div class="pt-2 border-t border-slate-200">
+          <div class="pt-2 border-t border-slate-700/40">
             <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">Bio / Tentang</span>
-            <p id="view-prof-bio" class="text-xs text-slate-600 leading-relaxed italic">-</p>
+            <p id="view-prof-bio" class="text-xs text-slate-300 leading-relaxed italic">-</p>
           </div>
         </div>
 
         <div class="flex gap-2">
-          <button id="btn-edit-profile-trigger" onclick="switchProfileToEditMode()" class="hidden w-full rounded-xl py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/20 transition">
+          <button id="btn-edit-profile-trigger" onclick="switchProfileToEditMode()" class="hidden w-full rounded-xl py-2.5 text-xs font-bold text-deep bg-gradient-to-r from-cyan-300 to-emerald-300 hover:opacity-95 transition">
             ✏️ Edit Biodata Saya
           </button>
-          <a id="btn-wa-profile-trigger" href="#" target="_blank" class="hidden w-full rounded-xl py-2.5 text-xs font-bold text-center text-white bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-500/20 transition">
+          <a id="btn-wa-profile-trigger" href="#" target="_blank" class="hidden w-full rounded-xl py-2.5 text-xs font-bold text-center text-deep bg-emerald-300 hover:bg-emerald-400 transition">
             💬 Hubungi via WhatsApp
           </a>
         </div>
@@ -446,37 +364,37 @@
       <form id="profile-edit-form" class="hidden space-y-3">
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Lengkap</label>
-            <input id="edit-prof-name" type="text" required class="input-dark w-full rounded-xl px-3 py-2.5 text-sm" />
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Nama Lengkap</label>
+            <input id="edit-prof-name" type="text" required class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white" />
           </div>
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">NIM</label>
-            <input id="edit-prof-nim" type="text" placeholder="2200018001" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400" />
+            <label class="block text-xs font-semibold text-slate-400 mb-1">NIM</label>
+            <input id="edit-prof-nim" type="text" placeholder="2200018001" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500" />
           </div>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Program Studi</label>
-            <input id="edit-prof-prodi" type="text" placeholder="Informatika" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400" />
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Program Studi</label>
+            <input id="edit-prof-prodi" type="text" placeholder="Informatika" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500" />
           </div>
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Angkatan</label>
-            <input id="edit-prof-angkatan" type="text" placeholder="2023" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400" />
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Angkatan</label>
+            <input id="edit-prof-angkatan" type="text" placeholder="2023" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500" />
           </div>
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Nomor WhatsApp</label>
-          <input id="edit-prof-phone" type="text" placeholder="08123456789" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400" />
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Nomor WhatsApp</label>
+          <input id="edit-prof-phone" type="text" placeholder="08123456789" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500" />
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Bio / Status</label>
-          <textarea id="edit-prof-bio" rows="2" maxlength="150" placeholder="Anak TI, suka ngopi..." class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400 resize-none"></textarea>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Bio / Status</label>
+          <textarea id="edit-prof-bio" rows="2" maxlength="150" placeholder="Anak TI, suka ngopi..." class="input-dark w-full rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-slate-500 resize-none"></textarea>
         </div>
         <div class="flex gap-2 pt-2">
-          <button type="button" onclick="cancelProfileEdit()" class="flex-1 rounded-xl py-2.5 text-xs font-bold border border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+          <button type="button" onclick="cancelProfileEdit()" class="flex-1 rounded-xl py-2.5 text-xs font-bold border border-slate-600 bg-panel hover:bg-panel2 text-slate-300 transition">
             Batal
           </button>
-          <button type="submit" id="btn-save-profile" class="flex-1 rounded-xl py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md transition">
+          <button type="submit" id="btn-save-profile" class="flex-1 rounded-xl py-2.5 text-xs font-bold text-deep bg-gradient-to-r from-cyan-300 to-emerald-300 hover:opacity-95 transition">
             Simpan Perubahan
           </button>
         </div>
@@ -485,20 +403,20 @@
   </div>
 
   <!-- ===================== MODAL KONFIRMASI HAPUS ===================== -->
-  <div id="delete-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm fade-in">
-    <div class="w-full max-w-sm glass bg-white rounded-2xl p-6 glow-cyan text-center space-y-4">
-      <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 mx-auto flex items-center justify-center text-xl font-bold border border-red-200">
+  <div id="delete-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm fade-in">
+    <div class="w-full max-w-sm glass rounded-2xl p-6 glow-cyan text-center space-y-4">
+      <div class="w-12 h-12 rounded-full bg-red-500/20 text-red-400 mx-auto flex items-center justify-center text-xl font-bold border border-red-500/30">
         🗑️
       </div>
       <div>
-        <h3 class="text-lg font-bold text-slate-900">Anda Yakin?</h3>
-        <p id="delete-modal-msg" class="text-xs text-slate-500 mt-1">Postingan akan dihapus secara permanen.</p>
+        <h3 class="text-lg font-bold text-white">Anda Yakin?</h3>
+        <p class="text-xs text-slate-400 mt-1">Postingan akan dihapus secara permanen.</p>
       </div>
       <div class="flex gap-3 pt-2">
-        <button id="modal-cancel-btn" class="flex-1 rounded-xl py-2.5 text-xs font-bold border border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+        <button id="modal-cancel-btn" class="flex-1 rounded-xl py-2.5 text-xs font-bold border border-slate-600 bg-panel hover:bg-panel2 text-slate-300 transition">
           Batal
         </button>
-        <button id="modal-confirm-btn" class="flex-1 rounded-xl py-2.5 text-xs font-bold bg-red-600 hover:bg-red-700 text-white shadow-md transition">
+        <button id="modal-confirm-btn" class="flex-1 rounded-xl py-2.5 text-xs font-bold bg-red-500 hover:bg-red-600 text-white transition">
           Ya, Hapus
         </button>
       </div>
@@ -582,8 +500,8 @@
       t.textContent = msg;
       t.className = `fixed bottom-5 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl text-sm font-semibold border shadow-xl transition-all ${
         isError 
-          ? 'bg-red-600 border-red-700 text-white' 
-          : 'bg-slate-900 border-slate-800 text-white'
+          ? 'bg-red-900/90 border-red-500/50 text-red-100' 
+          : 'bg-panel border-cyan-400/30 text-cyan-100'
       }`;
       t.classList.remove('hidden');
       clearTimeout(showToast._timer);
@@ -773,6 +691,7 @@
         const { error } = await supabaseClient.from('profiles').upsert(updatedPayload);
         if (error) throw error;
 
+        // Sinkronkan data auth metadata
         await supabaseClient.auth.updateUser({ data: { full_name: updatedPayload.full_name } });
 
         currentUser.name = updatedPayload.full_name;
@@ -789,11 +708,9 @@
     });
 
     // ---------- Modal Hapus Logic ----------
-    window.promptDelete = function(id, type, message) {
+    window.promptDelete = function(id, type) {
       deleteTargetId = id;
       deleteTargetType = type;
-      const msgEl = document.getElementById('delete-modal-msg');
-      if (msgEl && message) msgEl.textContent = message;
       document.getElementById('delete-modal').classList.remove('hidden');
     };
 
@@ -868,15 +785,6 @@
             nim: nim,
             email: email
           });
-          try {
-            await supabaseClient.from('users').upsert({
-              id: signUpData.user.id,
-              name: name,
-              email: email
-            }, { onConflict: 'id' });
-          } catch (e) {
-            console.warn('Gagal simpan ke tabel users:', e.message);
-          }
         }
 
         showToast('Pendaftaran berhasil! Silakan login.');
@@ -945,32 +853,14 @@
         currentUser = {
           uid: session.user.id,
           email: session.user.email,
-          name: fullName,
-          role: 'user'
+          name: fullName
         };
-
-        if (supabaseClient) {
-          try {
-            const { data: roleRow } = await supabaseClient
-              .from('users')
-              .select('role')
-              .eq('id', session.user.id)
-              .maybeSingle();
-            if (roleRow && roleRow.role) {
-              currentUser.role = roleRow.role;
-            }
-          } catch (e) {
-            console.warn('Gagal memuat role pengguna:', e);
-          }
-        }
-
         navUsername.textContent = currentUser.name;
         document.getElementById('nav-avatar-initial').textContent = currentUser.name.charAt(0).toUpperCase();
         
         authScreen.classList.add('hidden-strict');
         appScreen.classList.remove('hidden-strict');
 
-        updateAdminAccess();
         initRealtime();
       } else {
         currentUser = null;
@@ -989,101 +879,26 @@
     // ---------- Tabs ----------
     const tabLF = document.getElementById('tab-lostfound');
     const tabNB = document.getElementById('tab-nebeng');
-    const tabAdmin = document.getElementById('tab-admin');
     const panelLF = document.getElementById('panel-lostfound');
     const panelNB = document.getElementById('panel-nebeng');
-    const panelAdmin = document.getElementById('panel-admin');
 
-    function activateTab(tab, panel) {
-      [tabLF, tabNB, tabAdmin].forEach(t => {
-        t.classList.remove('tab-active');
-        t.classList.add('text-slate-600');
-      });
-      [panelLF, panelNB, panelAdmin].forEach(p => p.classList.add('hidden'));
-      tab.classList.add('tab-active');
-      tab.classList.remove('text-slate-600');
-      panel.classList.remove('hidden');
-    }
-
-    tabLF.addEventListener('click', () => activateTab(tabLF, panelLF));
-
-    tabNB.addEventListener('click', () => activateTab(tabNB, panelNB));
-
-    tabAdmin.addEventListener('click', () => {
-      activateTab(tabAdmin, panelAdmin);
-      renderAdminDashboard();
+    tabLF.addEventListener('click', () => {
+      tabLF.classList.add('tab-active');
+      tabLF.classList.remove('text-slate-400');
+      tabNB.classList.remove('tab-active');
+      tabNB.classList.add('text-slate-400');
+      panelLF.classList.remove('hidden');
+      panelNB.classList.add('hidden');
     });
 
-    // ---------- Admin Panel ----------
-    function updateAdminAccess() {
-      if (!tabAdmin) return;
-      if (currentUser && currentUser.role === 'admin') {
-        tabAdmin.classList.remove('hidden-strict');
-      } else {
-        tabAdmin.classList.add('hidden-strict');
-      }
-    }
-
-    function renderAdminDashboard() {
-      if (!currentUser || currentUser.role !== 'admin') return;
-      document.getElementById('admin-total-lf').textContent = lfPosts.length;
-      document.getElementById('admin-total-nb').textContent = nbPosts.length;
-      renderAdminLF();
-      renderAdminNB();
-    }
-
-    function renderAdminLF() {
-      const tbody = document.getElementById('admin-lf-rows');
-      const empty = document.getElementById('admin-lf-empty');
-      if (lfPosts.length === 0) {
-        tbody.innerHTML = '';
-        empty.classList.remove('hidden');
-        return;
-      }
-      empty.classList.add('hidden');
-      tbody.innerHTML = lfPosts.map(p => `
-        <tr class="border-b border-slate-200">
-          <td class="py-2 pr-3 text-slate-900 font-semibold">${escapeHtml(p.title)}</td>
-          <td class="py-2 pr-3">
-            <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold ${p.type === 'lost' ? 'badge-lost' : 'badge-found'}">${p.type === 'lost' ? 'Hilang' : 'Ditemukan'}</span>
-          </td>
-          <td class="py-2 pr-3 text-slate-600">${escapeHtml(p.location)}</td>
-          <td class="py-2 pr-3 text-slate-600">${escapeHtml(p.user_name || 'Anonim')}</td>
-          <td class="py-2 pr-3 text-slate-500">${formatTime(p.created_at)}</td>
-          <td class="py-2 text-right">
-            <button onclick="promptDelete('${p.id}', 'lostfound', 'Hapus permanen postingan Lost & Found ini?')" class="text-red-500 hover:text-red-600 font-bold">Hapus Permanen</button>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function renderAdminNB() {
-      const tbody = document.getElementById('admin-nb-rows');
-      const empty = document.getElementById('admin-nb-empty');
-      if (nbPosts.length === 0) {
-        tbody.innerHTML = '';
-        empty.classList.remove('hidden');
-        return;
-      }
-      empty.classList.add('hidden');
-      tbody.innerHTML = nbPosts.map(p => `
-        <tr class="border-b border-slate-200">
-          <td class="py-2 pr-3 text-slate-900 font-semibold">${escapeHtml(p.from)} ➔ ${escapeHtml(p.to)}</td>
-          <td class="py-2 pr-3">
-            <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold badge-nebeng">${p.type === 'offer' ? 'Nawarin' : 'Cari'}</span>
-          </td>
-          <td class="py-2 pr-3 text-slate-600">${escapeHtml(p.date)}</td>
-          <td class="py-2 pr-3 text-slate-600">${escapeHtml(p.user_name || 'Anonim')}</td>
-          <td class="py-2 pr-3 text-slate-600">${escapeHtml(p.contact)}</td>
-          <td class="py-2 pr-3">
-            <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold ${p.status === 'full' ? 'badge-full' : 'badge-open'}">${p.status === 'full' ? 'Penuh' : 'Tersedia'}</span>
-          </td>
-          <td class="py-2 text-right">
-            <button onclick="promptDelete('${p.id}', 'nebeng', 'Hapus permanen postingan Nebeng ini?')" class="text-red-500 hover:text-red-600 font-bold">Hapus Permanen</button>
-          </td>
-        </tr>
-      `).join('');
-    }
+    tabNB.addEventListener('click', () => {
+      tabNB.classList.add('tab-active');
+      tabNB.classList.remove('text-slate-400');
+      tabLF.classList.remove('tab-active');
+      tabLF.classList.add('text-slate-400');
+      panelNB.classList.remove('hidden');
+      panelLF.classList.add('hidden');
+    });
 
     // ============================================================
     // Realtime Engine
@@ -1117,7 +932,6 @@
       if (error) { console.error('LF Fetch error:', error.message); return; }
       lfPosts = data || [];
       renderLF();
-      renderAdminDashboard();
     }
 
     function subscribeLF() {
@@ -1150,7 +964,6 @@
       if (error) { console.error('NB Fetch error:', error.message); return; }
       nbPosts = data || [];
       renderNB();
-      renderAdminDashboard();
     }
 
     function subscribeNB() {
@@ -1182,43 +995,18 @@
 
       const submitBtn = document.getElementById('lf-submit-btn');
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Memproses...';
 
-      const imageInput = document.getElementById('lf-image');
-      const imageFile = imageInput ? imageInput.files[0] : null;
-      let imageUrl = null;
+      const payload = {
+        type: document.getElementById('lf-type').value,
+        title: document.getElementById('lf-title').value.trim(),
+        location: document.getElementById('lf-location').value.trim(),
+        desc: document.getElementById('lf-desc').value.trim(),
+        contact: document.getElementById('lf-contact').value.trim(),
+        user_id: currentUser.uid,
+        user_name: currentUser.name
+      };
 
       try {
-        // Upload foto jika pengguna memilih file
-        if (imageFile) {
-          const fileExt = imageFile.name.split('.').pop();
-          const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
-          const filePath = `lostfound/${fileName}`;
-
-          const { data: uploadData, error: uploadError } = await supabaseClient.storage
-            .from('posts-images')
-            .upload(filePath, imageFile);
-
-          if (uploadError) throw uploadError;
-
-          const { data: publicUrlData } = supabaseClient.storage
-            .from('posts-images')
-            .getPublicUrl(filePath);
-
-          imageUrl = publicUrlData.publicUrl;
-        }
-
-        const payload = {
-          type: document.getElementById('lf-type').value,
-          title: document.getElementById('lf-title').value.trim(),
-          location: document.getElementById('lf-location').value.trim(),
-          desc: document.getElementById('lf-desc').value.trim(),
-          contact: document.getElementById('lf-contact').value.trim(),
-          image_url: imageUrl,
-          user_id: currentUser.uid,
-          user_name: currentUser.name
-        };
-
         const { data, error } = await supabaseClient
           .from('lostfound')
           .insert([payload])
@@ -1237,7 +1025,6 @@
         showToast('Gagal membuat postingan: ' + err.message, true);
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Publikasikan';
       }
     });
 
@@ -1268,30 +1055,25 @@
         const badgeLabel = p.type === 'lost' ? 'Hilang' : 'Ditemukan';
 
         return `
-          <div class="glass rounded-2xl p-4 space-y-2 relative fade-in bg-white border border-slate-200/80 shadow-sm">
+          <div class="glass rounded-2xl p-4 space-y-2 relative fade-in">
             <div class="flex items-center justify-between gap-2">
               <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-lg ${badgeClass}">${badgeLabel}</span>
               <span class="text-[10px] text-slate-400">${formatTime(p.created_at)}</span>
             </div>
-            <h3 class="font-bold text-slate-900 text-base">${escapeHtml(p.title)}</h3>
-            <p class="text-xs text-slate-600 font-medium">📍 ${escapeHtml(p.location)}</p>
-            <p class="text-xs text-slate-500 leading-relaxed">${escapeHtml(p.desc)}</p>
-            ${p.image_url ? `
-              <div class="mt-2 overflow-hidden rounded-xl border border-slate-200 bg-slate-100 max-h-56">
-                <img src="${p.image_url}" alt="${escapeHtml(p.title)}" class="w-full h-full object-cover" loading="lazy" />
-              </div>
-            ` : ''}
-            <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2 text-xs">
-              <span class="text-slate-500">Oleh: 
-                <button data-action="open-profile" data-userid="${p.user_id}" data-username="${escapeHtml(p.user_name || 'Anonim')}" class="text-blue-600 font-bold hover:underline">
+            <h3 class="font-bold text-white text-base">${escapeHtml(p.title)}</h3>
+            <p class="text-xs text-slate-300 font-medium">📍 ${escapeHtml(p.location)}</p>
+            <p class="text-xs text-slate-400 leading-relaxed">${escapeHtml(p.desc)}</p>
+            <div class="pt-2 border-t border-slate-700/50 flex items-center justify-between gap-2 text-xs">
+              <span class="text-slate-400">Oleh: 
+                <button data-action="open-profile" data-userid="${p.user_id}" data-username="${escapeHtml(p.user_name || 'Anonim')}" class="text-cyan-300 font-bold hover:underline">
                   ${escapeHtml(p.user_name || 'Anonim')}
                 </button>
               </span>
               <div class="flex items-center gap-2">
-                <a href="${formatWAUrl(p.contact)}" target="_blank" rel="noopener noreferrer" class="text-blue-600 font-semibold hover:underline">
+                <a href="${formatWAUrl(p.contact)}" target="_blank" rel="noopener noreferrer" class="text-cyan-300 font-semibold hover:underline">
                   📞 ${escapeHtml(p.contact)}
                 </a>
-                ${isOwner ? `<button data-action="delete-post" data-postid="${p.id}" class="text-red-500 hover:text-red-600 font-bold ml-2">Hapus</button>` : ''}
+                ${isOwner ? `<button data-action="delete-post" data-postid="${p.id}" class="text-red-400 hover:text-red-300 font-bold ml-2">Hapus</button>` : ''}
               </div>
             </div>
           </div>
@@ -1333,7 +1115,6 @@
         time: document.getElementById('nb-time').value,
         note: document.getElementById('nb-note').value.trim(),
         contact: document.getElementById('nb-contact').value.trim(),
-        maps_link: document.getElementById('nb-maps').value.trim() || null,
         user_id: currentUser.uid,
         user_name: currentUser.name
       };
@@ -1360,29 +1141,6 @@
       }
     });
 
-    function waLink(contact) {
-      const raw = String(contact || '').trim().replace(/\s+/g, '');
-      if (raw.startsWith('08')) return 'https://wa.me/62' + raw.slice(1);
-      return null;
-    }
-
-    async function setNebengStatus(id, status) {
-      if (!supabaseClient) return;
-      try {
-        const { error } = await supabaseClient
-          .from('nebeng')
-          .update({ status })
-          .eq('id', id);
-        if (error) throw error;
-        showToast(status === 'full' ? 'Postingan ditandai Penuh.' : 'Postingan dibuka kembali (Tersedia).');
-        nbPosts = nbPosts.map(p => p.id === id ? { ...p, status } : p);
-        renderNB();
-        renderAdminDashboard();
-      } catch (err) {
-        showToast('Gagal mengubah status: ' + err.message, true);
-      }
-    }
-
     function renderNB() {
       const filter = document.getElementById('nb-filter').value;
       const search = document.getElementById('nb-search').value.toLowerCase();
@@ -1406,50 +1164,29 @@
 
       container.innerHTML = filtered.map(p => {
         const isOwner = currentUser && p.user_id === currentUser.uid;
-        const isFull = p.status === 'full';
         const badgeClass = 'badge-nebeng';
         const badgeLabel = p.type === 'offer' ? 'Nawarin Tumpangan' : 'Cari Tumpangan';
-        const statusClass = isFull ? 'badge-full' : 'badge-open';
-        const statusLabel = isFull ? 'Penuh' : 'Tersedia';
-
-        const wa = waLink(p.contact);
-        const contactHtml = isFull
-          ? `<span class="text-slate-500 font-semibold">📞 ${escapeHtml(p.contact)}</span>`
-          : wa
-            ? `<a href="${wa}" target="_blank" rel="noopener noreferrer" class="text-blue-600 font-semibold hover:underline">📞 ${escapeHtml(p.contact)} ↗</a>`
-            : `<span class="text-emerald-600 font-semibold">📞 ${escapeHtml(p.contact)}</span>`;
-
-        const mapsHtml = p.maps_link
-          ? `<a href="${escapeHtml(p.maps_link)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-lg text-cyan-700 bg-cyan-50 border border-cyan-200 hover:bg-cyan-100 transition">🗺️ Buka rute di Maps</a>`
-          : '';
 
         return `
-          <div class="glass rounded-2xl p-4 space-y-2 relative fade-in bg-white border border-slate-200/80 shadow-sm${isFull ? ' opacity-60' : ''}">
+          <div class="glass rounded-2xl p-4 space-y-2 relative fade-in">
             <div class="flex items-center justify-between gap-2">
-              <div class="flex items-center gap-2">
-                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-lg ${badgeClass}">${badgeLabel}</span>
-                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-lg ${statusClass}">${statusLabel}</span>
-              </div>
+              <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-lg ${badgeClass}">${badgeLabel}</span>
               <span class="text-[10px] text-slate-400">${formatTime(p.created_at)}</span>
             </div>
-            <h3 class="font-bold text-slate-900 text-base">${escapeHtml(p.from)} ➔ ${escapeHtml(p.to)}</h3>
-            <p class="text-xs text-slate-600 font-medium">📅 ${escapeHtml(p.date)} · ⏰ ${escapeHtml(p.time)}</p>
-            ${mapsHtml}
-            ${p.note ? `<p class="text-xs text-slate-500 leading-relaxed">${escapeHtml(p.note)}</p>` : ''}
-            <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2 text-xs">
-              <span class="text-slate-500">Oleh: 
-                <button data-action="open-profile" data-userid="${p.user_id}" data-username="${escapeHtml(p.user_name || 'Anonim')}" class="text-blue-600 font-bold hover:underline">
+            <h3 class="font-bold text-white text-base">${escapeHtml(p.from)} ➔ ${escapeHtml(p.to)}</h3>
+            <p class="text-xs text-slate-300 font-medium">📅 ${escapeHtml(p.date)} · ⏰ ${escapeHtml(p.time)}</p>
+            ${p.note ? `<p class="text-xs text-slate-400 leading-relaxed">${escapeHtml(p.note)}</p>` : ''}
+            <div class="pt-2 border-t border-slate-700/50 flex items-center justify-between gap-2 text-xs">
+              <span class="text-slate-400">Oleh: 
+                <button data-action="open-profile" data-userid="${p.user_id}" data-username="${escapeHtml(p.user_name || 'Anonim')}" class="text-emerald-300 font-bold hover:underline">
                   ${escapeHtml(p.user_name || 'Anonim')}
                 </button>
               </span>
               <div class="flex items-center gap-2">
-                ${contactHtml}
-                ${isOwner ? `
-                  ${isFull
-                    ? `<button data-action="set-status" data-postid="${p.id}" data-status="open" class="text-emerald-600 hover:text-emerald-700 font-bold">Tandai Tersedia</button>`
-                    : `<button data-action="set-status" data-postid="${p.id}" data-status="full" class="text-amber-600 hover:text-amber-700 font-bold">Tandai Penuh</button>`}
-                  <button data-action="delete-post" data-postid="${p.id}" class="text-red-500 hover:text-red-600 font-bold ml-2">Hapus</button>
-                ` : ''}
+                <a href="${formatWAUrl(p.contact)}" target="_blank" rel="noopener noreferrer" class="text-emerald-300 font-semibold hover:underline">
+                  📞 ${escapeHtml(p.contact)}
+                </a>
+                ${isOwner ? `<button data-action="delete-post" data-postid="${p.id}" class="text-red-400 hover:text-red-300 font-bold ml-2">Hapus</button>` : ''}
               </div>
             </div>
           </div>
@@ -1461,11 +1198,6 @@
       const profBtn = e.target.closest('[data-action="open-profile"]');
       if (profBtn) {
         openProfile(profBtn.dataset.userid, profBtn.dataset.username);
-        return;
-      }
-      const statusBtn = e.target.closest('[data-action="set-status"]');
-      if (statusBtn) {
-        setNebengStatus(statusBtn.dataset.postid, statusBtn.dataset.status);
         return;
       }
       const delBtn = e.target.closest('[data-action="delete-post"]');
