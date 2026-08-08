@@ -86,9 +86,11 @@ function formatWAUrl(phone) {
 // ---------- Modal Konfirmasi Hapus ----------
 let deleteModalOnConfirm = null;
 
-function openDeleteModal(message, onConfirm) {
+function openDeleteModal(message, onConfirm, confirmLabel = 'Ya, Hapus', icon = '🗑️') {
   const msgEl = document.getElementById('delete-modal-msg');
   if (msgEl && message) msgEl.textContent = message;
+  document.getElementById('modal-confirm-btn').textContent = confirmLabel;
+  document.getElementById('delete-modal-icon').textContent = icon;
   deleteModalOnConfirm = onConfirm;
   document.getElementById('delete-modal').classList.remove('hidden');
 }
@@ -96,6 +98,8 @@ function openDeleteModal(message, onConfirm) {
 function closeDeleteModal() {
   deleteModalOnConfirm = null;
   document.getElementById('delete-modal').classList.add('hidden');
+  document.getElementById('modal-confirm-btn').textContent = 'Ya, Hapus';
+  document.getElementById('delete-modal-icon').textContent = '🗑️';
 }
 
 document.getElementById('modal-cancel-btn').addEventListener('click', closeDeleteModal);

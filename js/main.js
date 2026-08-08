@@ -1,8 +1,10 @@
 // ---------- Fetch dari Supabase ----------
+// User biasa hanya melihat data yang TIDAK diarsipkan (is_archived = false).
 async function loadLostFound() {
   const { data, error } = await supabase
     .from('lostfound')
     .select('*')
+    .eq('is_archived', false)
     .order('created_at', { ascending: false });
   if (error) {
     console.error('LF fetch error:', error);
@@ -10,13 +12,13 @@ async function loadLostFound() {
   }
   lfPosts = data;
   renderLF();
-  renderAdminDashboard();
 }
 
 async function loadNebeng() {
   const { data, error } = await supabase
     .from('nebeng')
     .select('*')
+    .eq('is_archived', false)
     .order('created_at', { ascending: false });
   if (error) {
     console.error('NB fetch error:', error);
@@ -24,7 +26,6 @@ async function loadNebeng() {
   }
   nbPosts = data;
   renderNB();
-  renderAdminDashboard();
 }
 
 // ---------- Realtime Listeners ----------

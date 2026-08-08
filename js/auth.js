@@ -1,9 +1,16 @@
 // DOM refs
 const authScreen = document.getElementById('auth-screen');
 const appScreen = document.getElementById('app-screen');
+const adminScreen = document.getElementById('admin-screen');
 const loginForm = document.getElementById('login-form');
 const registerForm = document.getElementById('register-form');
 const navUsername = document.getElementById('nav-username');
+const adminUsername = document.getElementById('admin-username');
+
+function showScreen(screen) {
+  [authScreen, appScreen, adminScreen].forEach(s => s.classList.add('hidden-strict'));
+  screen.classList.remove('hidden-strict');
+}
 
 // ---------- Auth UI switch ----------
 document.getElementById('to-register').addEventListener('click', () => {
@@ -84,7 +91,7 @@ loginForm.addEventListener('submit', async (e) => {
 });
 
 // ---------- Logout ----------
-document.getElementById('logout-btn').addEventListener('click', async () => {
+async function handleLogout() {
   try {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
@@ -92,33 +99,41 @@ document.getElementById('logout-btn').addEventListener('click', async () => {
   } catch (err) {
     alert('Gagal logout: ' + err.message);
   }
-});
+}
+
+document.getElementById('logout-btn').addEventListener('click', handleLogout);
+document.getElementById('admin-logout-btn').addEventListener('click', handleLogout);
 
 // ---------- Auth Observer ----------
 supabase.auth.onAuthStateChange(async (_event, session) => {
   const user = session?.user;
-  if (user) {
-    const name = user.user_metadata?.full_name || user.email.split('@')[0] || 'User';
-    currentUser = { uid: user.id, email: user.email, name, role: 'user' };
-
-    // Ambil role dari tabel users (default 'user' jika belum ada).
-    const { data } = await supabase
-      .from('users')
-      .select('role')
-      .eq('id', user.id)
-      .maybeSingle();
-    if (data && data.role) currentUser.role = data.role;
-
-    navUsername.textContent = name;
-    authScreen.classList.add('hidden-strict');
-    appScreen.classList.remove('hidden-strict');
-
-    updateAdminAccess();
-    initRealtimeListeners();
-  } else {
+  if (!user) {
     currentUser = null;
     if (supabaseChannel) supabaseChannel.unsubscribe();
-    appScreen.classList.add('hidden-strict');
-    authScreen.classList.remove('hidden-strict');
+    showScreen(authScreen);
+    return;
+  }
+
+  const name = user.user_metadata?.full_name || user.email.split('@')[0] || 'User';
+
+  // Ambil role dari tabel users (default 'user' jika belum ada).
+  let role = 'user';
+  const { data } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .maybeSingle();
+  if (data && data.role) role = data.role;
+
+  currentUser = { uid: user.id, email: user.email, name, role };
+  navUsername.textContent = name;
+  adminUsername.textContent = name;
+
+  if (role === 'admin') {
+    showScreen(adminScreen);
+    adminFetchData();
+  } else {
+    showScreen(appScreen);
+    initRealtimeListeners();
   }
 });

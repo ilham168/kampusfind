@@ -32,27 +32,25 @@ document.getElementById('nb-form').addEventListener('submit', async (e) => {
   }
 });
 
-// ---------- Helper: Link WhatsApp ----------
-// Ubah "08xxxxxxxxxx" -> "628xxxxxxxxxx", selain itu kembalikan null.
-function waLink(contact) {
-  const raw = String(contact || '').trim().replace(/\s+/g, '');
-  if (raw.startsWith('08')) return 'https://wa.me/62' + raw.slice(1);
-  return null;
-}
-
 // ---------- Update status kuota (open <-> full) ----------
-async function setNebengStatus(id, status) {
-  try {
-    const { error } = await supabase
-      .from('nebeng')
-      .update({ status })
-      .eq('id', id);
-    if (error) throw error;
-    showToast(status === 'full' ? 'Postingan ditandai Penuh.' : 'Postingan dibuka kembali (Tersedia).');
-    loadNebeng();
-  } catch (err) {
-    alert('Gagal mengubah status: ' + err.message);
-  }
+function setNebengStatus(id, status) {
+  const isFull = status === 'full';
+  const message = isFull
+    ? 'Tandai postingan nebeng ini sebagai PENUH? Postingan tetap terlihat, tapi kontak disembunyikan.'
+    : 'Buka kembali postingan ini menjadi Tersedia?';
+  openDeleteModal(message, async () => {
+    try {
+      const { error } = await supabase
+        .from('nebeng')
+        .update({ status })
+        .eq('id', id);
+      if (error) throw error;
+      showToast(isFull ? 'Postingan ditandai Penuh.' : 'Postingan dibuka kembali (Tersedia).');
+      loadNebeng();
+    } catch (err) {
+      alert('Gagal mengubah status: ' + err.message);
+    }
+  }, isFull ? 'Ya, Tandai Penuh' : 'Ya, Buka Kembali', isFull ? '🚗' : '✅');
 }
 
 function deleteNB(id) {
@@ -99,13 +97,11 @@ function renderNB() {
     const statusClass = isFull ? 'badge-full' : 'badge-open';
     const statusLabel = isFull ? 'Penuh' : 'Tersedia';
 
-    // Kontak: link WA kalau diawali "08" & belum penuh, selain itu teks biasa.
-    const wa = waLink(p.contact);
+    // Kontak: link WA selalu aktif (pakai formatWAUrl seperti Lost & Found),
+    // tapi saat postingan Penuh kontaknya disembunyikan.
     const contactHtml = isFull
       ? `<span class="text-slate-500 font-semibold">📞 ${escapeHtml(p.contact)}</span>`
-      : wa
-        ? `<a href="${wa}" target="_blank" rel="noopener" class="text-emerald-300 font-semibold hover:text-emerald-200 hover:underline">📞 ${escapeHtml(p.contact)} ↗</a>`
-        : `<span class="text-emerald-300 font-semibold">📞 ${escapeHtml(p.contact)}</span>`;
+      : `<a href="${formatWAUrl(p.contact)}" target="_blank" rel="noopener" class="text-emerald-300 font-semibold hover:text-emerald-200 hover:underline">📞 ${escapeHtml(p.contact)} ↗</a>`;
 
     const ownerActions = isOwner ? `
       <div class="flex items-center gap-2">
