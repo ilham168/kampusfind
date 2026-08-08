@@ -2,7 +2,7 @@
 
 **Lost & Found + Nebeng Kampus** — platform web untuk mahasiswa dalam satu kampus. Temukan barang hilang, laporkan barang ditemukan, atau cari/tawarkan tumpangan pulang-pergi kuliah. Semua data diperbarui **real-time**.
 
-> 🔗 **Demo:** [kampusfind.netlify.app](https://kampusfound.netlify.app/)
+> 🔗 **Demo:** [kampusfound.netlify.app](https://kampusfound.netlify.app/)
 
 > Dibangun dengan HTML, Tailwind CSS, Vanilla JavaScript, dan Supabase sebagai backend.
 
