@@ -26,8 +26,8 @@
 - Tawarkan tumpangan atau cari tumpangan
 - Rute dari–ke, tanggal & **waktu menunggu sampai jam** (presisi menit)
 - Postingan otomatis **kadaluarsa & diarsipkan** begitu jam menunggu lewat
+- Hitung mundur **menit berjalan** (countdown) sampai waktu menunggu habis
 - **Link Google Maps** untuk buka rute
-- Tandai status **Penuh / Tersedia** oleh pemilik postingan
 - Kontak langsung via WhatsApp
 
 ### ⚡ Real-time

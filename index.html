@@ -396,7 +396,7 @@
                       <th class="py-2 pr-3">Tanggal</th>
                       <th class="py-2 pr-3">Oleh</th>
                       <th class="py-2 pr-3">Kontak</th>
-                      <th class="py-2 pr-3">Status</th>
+                      <th class="py-2 pr-3">Info</th>
                       <th class="py-2 text-right">Aksi</th>
                     </tr>
                   </thead>
@@ -549,7 +549,7 @@
       </div>
       <div>
         <h3 class="text-lg font-bold text-slate-900">Anda Yakin?</h3>
-        <p id="delete-modal-msg" class="text-xs text-slate-500 mt-1">Postingan akan diarsipkan dan disembunyikan dari feed.</p>
+        <p id="delete-modal-msg" class="text-xs text-slate-500 mt-1">Postingan akan dihapus secara permanen.</p>
       </div>
       <div class="flex gap-3 pt-2">
         <button id="modal-cancel-btn" class="flex-1 rounded-xl py-2.5 text-xs font-bold border border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
@@ -625,6 +625,7 @@
     let nbChannel = null;
     let currentProfileData = null;
     let archiveTimer = null;
+    let countdownTimer = null;
 
     // Delete Target
     let deleteTargetId = null;
@@ -1287,7 +1288,6 @@
           <td class="py-2 pr-3 text-slate-600">${escapeHtml(p.contact)}</td>
           <td class="py-2 pr-3">
             <div class="flex flex-wrap gap-1">
-              <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold ${p.status === 'full' ? 'badge-full' : 'badge-open'}">${p.status === 'full' ? 'Penuh' : 'Tersedia'}</span>
               ${isPostArchived(p) ? '<span class="px-2 py-0.5 rounded-lg text-[10px] font-bold badge-archived">Archived</span>' : ''}
               ${!isPostArchived(p) && isNebengExpired(p) ? '<span class="px-2 py-0.5 rounded-lg text-[10px] font-bold badge-expired">Expired</span>' : ''}
             </div>
@@ -1306,6 +1306,8 @@
       if (!supabaseClient) return;
       clearInterval(archiveTimer);
       archiveTimer = null;
+      clearInterval(countdownTimer);
+      countdownTimer = null;
       if (lfChannel) await supabaseClient.removeChannel(lfChannel);
       if (nbChannel) await supabaseClient.removeChannel(nbChannel);
       lfChannel = null;
@@ -1328,6 +1330,9 @@
         autoArchiveExpiredNebeng();
         renderNB();
       }, 60000);
+
+      // Hitung mundur "menit berjalan" di kartu postingan (tiap detik).
+      initNebengCountdown();
     }
 
     // ---------- Lost & Found Data ----------
@@ -1616,17 +1621,30 @@
       return !!exp && exp.getTime() < Date.now();
     }
 
-    function remainingInfo(p) {
-      const exp = getNebengExpiry(p);
-      if (!exp) return { text: '', cls: '' };
-      const diff = exp.getTime() - Date.now();
-      if (diff <= 0) return { text: 'Kadaluarsa', cls: 'text-red-500' };
-      const totalMin = Math.floor(diff / 60000);
-      const text = totalMin < 60
-        ? `${totalMin} menit lagi`
-        : `${Math.floor(totalMin / 60)} jam ${totalMin % 60} menit lagi`;
-      const cls = totalMin <= 30 ? 'text-amber-600' : 'text-slate-400';
-      return { text, cls };
+    function countdownText(ts) {
+      const diff = ts - Date.now();
+      if (diff <= 0) return '00:00';
+      const totalSec = Math.floor(diff / 1000);
+      const h = Math.floor(totalSec / 3600);
+      const m = Math.floor((totalSec % 3600) / 60);
+      const s = totalSec % 60;
+      const pad = n => String(n).padStart(2, '0');
+      return h > 0 ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
+    }
+
+    // Timer hitung mundur "menit berjalan" di setiap kartu postingan.
+    function initNebengCountdown() {
+      clearInterval(countdownTimer);
+      countdownTimer = setInterval(() => {
+        document.querySelectorAll('.nb-countdown').forEach(el => {
+          const ts = Number(el.dataset.ts);
+          if (!ts) return;
+          const diff = ts - Date.now();
+          const cls = diff <= 0 ? 'text-red-500' : diff <= 30 * 60000 ? 'text-amber-600' : 'text-slate-400';
+          el.textContent = countdownText(ts);
+          el.className = `nb-countdown font-mono font-semibold ${cls}`;
+        });
+      }, 1000);
     }
 
     async function autoArchiveExpiredNebeng() {
@@ -1656,23 +1674,6 @@
       return Boolean(p && p.is_archived === true);
     }
 
-    async function setNebengStatus(id, status) {
-      if (!supabaseClient) return;
-      try {
-        const { error } = await supabaseClient
-          .from('nebeng')
-          .update({ status })
-          .eq('id', id);
-        if (error) throw error;
-        showToast(status === 'full' ? 'Postingan ditandai Penuh.' : 'Postingan dibuka kembali (Tersedia).');
-        nbPosts = nbPosts.map(p => p.id === id ? { ...p, status } : p);
-        renderNB();
-        renderAdminDashboard();
-      } catch (err) {
-        showToast('Gagal mengubah status: ' + err.message, true);
-      }
-    }
-
     function renderNB() {
       const filter = document.getElementById('nb-filter').value;
       const search = document.getElementById('nb-search').value.toLowerCase();
@@ -1698,34 +1699,32 @@
 
       container.innerHTML = filtered.map(p => {
         const isOwner = currentUser && p.user_id === currentUser.uid;
-        const isFull = p.status === 'full';
         const badgeClass = 'badge-nebeng';
         const badgeLabel = p.type === 'offer' ? 'Nawarin Tumpangan' : 'Cari Tumpangan';
-        const statusClass = isFull ? 'badge-full' : 'badge-open';
-        const statusLabel = isFull ? 'Penuh' : 'Tersedia';
+
+        const exp = getNebengExpiry(p);
+        const expTs = exp ? exp.getTime() : null;
 
         const wa = waLink(p.contact);
-        const contactHtml = isFull
-          ? `<span class="text-slate-500 font-semibold">📞 ${escapeHtml(p.contact)}</span>`
-          : wa
-            ? `<a href="${wa}" target="_blank" rel="noopener noreferrer" class="text-blue-600 font-semibold hover:underline">📞 ${escapeHtml(p.contact)} ↗</a>`
-            : `<span class="text-emerald-600 font-semibold">📞 ${escapeHtml(p.contact)}</span>`;
+        const contactHtml = wa
+          ? `<a href="${wa}" target="_blank" rel="noopener noreferrer" class="text-blue-600 font-semibold hover:underline">📞 ${escapeHtml(p.contact)} ↗</a>`
+          : `<span class="text-emerald-600 font-semibold">📞 ${escapeHtml(p.contact)}</span>`;
 
         const mapsHtml = p.maps_link
           ? `<a href="${escapeHtml(p.maps_link)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-lg text-cyan-700 bg-cyan-50 border border-cyan-200 hover:bg-cyan-100 transition">🗺️ Buka rute di Maps</a>`
           : '';
 
         return `
-          <div class="glass rounded-2xl p-4 space-y-2 relative fade-in bg-white border border-slate-200/80 shadow-sm${isFull ? ' opacity-60' : ''}">
+          <div class="glass rounded-2xl p-4 space-y-2 relative fade-in bg-white border border-slate-200/80 shadow-sm">
             <div class="flex items-center justify-between gap-2">
               <div class="flex items-center gap-2">
                 <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-lg ${badgeClass}">${badgeLabel}</span>
-                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-lg ${statusClass}">${statusLabel}</span>
               </div>
               <span class="text-[10px] text-slate-400">${formatTime(p.created_at)}</span>
             </div>
             <h3 class="font-bold text-slate-900 text-base">${escapeHtml(p.from)} ➔ ${escapeHtml(p.to)}</h3>
-            <p class="text-xs text-slate-600 font-medium">📅 ${escapeHtml(p.date)} · ⏰ ${escapeHtml(p.time)}</p>
+            <p class="text-xs text-slate-600 font-medium">📅 ${escapeHtml(p.date)}</p>
+            <p class="text-xs text-slate-600 font-medium">⏰ Menunggu sampai ${escapeHtml(p.time)}${expTs ? ` · <span class="nb-countdown font-mono font-semibold text-slate-400" data-ts="${expTs}">${countdownText(expTs)}</span>` : ''}</p>
             ${mapsHtml}
             ${p.note ? `<p class="text-xs text-slate-500 leading-relaxed">${escapeHtml(p.note)}</p>` : ''}
             <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2 text-xs">
@@ -1736,12 +1735,7 @@
               </span>
               <div class="flex items-center gap-2">
                 ${contactHtml}
-                ${isOwner ? `
-                  ${isFull
-                    ? `<button data-action="set-status" data-postid="${p.id}" data-status="open" class="text-emerald-600 hover:text-emerald-700 font-bold">Tandai Tersedia</button>`
-                    : `<button data-action="set-status" data-postid="${p.id}" data-status="full" class="text-amber-600 hover:text-amber-700 font-bold">Tandai Penuh</button>`}
-                  <button data-action="delete-post" data-postid="${p.id}" class="text-red-500 hover:text-red-600 font-bold ml-2">Hapus</button>
-                ` : ''}
+                ${isOwner ? `<button data-action="delete-post" data-postid="${p.id}" class="text-red-500 hover:text-red-600 font-bold ml-2">Hapus</button>` : ''}
               </div>
             </div>
           </div>
@@ -1753,11 +1747,6 @@
       const profBtn = e.target.closest('[data-action="open-profile"]');
       if (profBtn) {
         openProfile(profBtn.dataset.userid, profBtn.dataset.username);
-        return;
-      }
-      const statusBtn = e.target.closest('[data-action="set-status"]');
-      if (statusBtn) {
-        setNebengStatus(statusBtn.dataset.postid, statusBtn.dataset.status);
         return;
       }
       const delBtn = e.target.closest('[data-action="delete-post"]');
