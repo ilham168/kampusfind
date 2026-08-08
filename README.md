@@ -24,7 +24,8 @@
 
 ### 🚗 Nebeng Kampus
 - Tawarkan tumpangan atau cari tumpangan
-- Rute dari–ke, tanggal & jam keberangkatan, catatan kursi
+- Rute dari–ke, tanggal & **waktu menunggu sampai jam** (presisi menit)
+- Postingan otomatis **kadaluarsa & diarsipkan** begitu jam menunggu lewat
 - **Link Google Maps** untuk buka rute
 - Tandai status **Penuh / Tersedia** oleh pemilik postingan
 - Kontak langsung via WhatsApp
@@ -70,7 +71,10 @@ kampusfind/
     └── migrations/             # SQL migrasi untuk Supabase
         ├── 0001_admin_soft_delete.sql
         ├── 0002_fix_null_archive.sql
-        └── 0003_add_status_column_nebeng.sql
+        ├── 0003_add_status_column_nebeng.sql
+        ├── 0004_profile_email_archive_guard.sql
+        ├── 0005_add_is_active_users.sql
+        └── 0006_add_expired_at_nebeng.sql   # Auto-archive nebeng (expired_at + pg_cron)
 ```
 
 ---
@@ -100,11 +104,14 @@ Lalu buka `http://localhost:8080`.
    - `0001_admin_soft_delete.sql` — tambah kolom `is_archived`, `role`, dll.
    - `0002_fix_null_archive.sql` — perbaiki data lama yang `NULL`.
    - `0003_add_status_column_nebeng.sql` — tambah kolom `status` pada tabel `nebeng`.
+   - `0004_profile_email_archive_guard.sql` — guard kolom email profile.
+   - `0005_add_is_active_users.sql` — kolom suspend akun `is_active`.
+   - `0006_add_expired_at_nebeng.sql` — kolom `expired_at` + auto-archive nebeng (pg_cron, opsional).
 3. Buat tabel yang dibutuhkan:
 
    **Tabel `lostfound`** — `id` (uuid, primary key), `type` (text), `title` (text), `location` (text), `desc` (text), `contact` (text), `image_url` (text, nullable), `user_id` (uuid), `user_name` (text), `created_at` (timestamptz), `is_archived` (boolean default `false`).
 
-   **Tabel `nebeng`** — `id` (uuid), `type` (text), `from` (text), `to` (text), `date` (date), `time` (time), `note` (text), `contact` (text), `maps_link` (text), `user_id` (uuid), `user_name` (text), `status` (text default `'open'`), `created_at` (timestamptz), `is_archived` (boolean default `false`).
+   **Tabel `nebeng`** — `id` (uuid), `type` (text), `from` (text), `to` (text), `date` (date), `time` (time), `expired_at` (timestamptz, nullable), `note` (text), `contact` (text), `maps_link` (text), `user_id` (uuid), `user_name` (text), `status` (text default `'open'`), `created_at` (timestamptz), `is_archived` (boolean default `false`).
 
    **Tabel `users`** — `id` (uuid), `name` (text), `email` (text), `role` (text default `'user'`).
 
