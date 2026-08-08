@@ -63,6 +63,8 @@
     .badge-nebeng { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
     .badge-open { background: #ecfdf5; color: #10b981; border: 1px solid #a7f3d0; }
     .badge-full { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+    .badge-archived { background: #fff1f2; color: #e11d48; border: 1px solid #fecdd3; }
+    .badge-expired { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
 
     .scroll-thin::-webkit-scrollbar { width: 8px; height: 8px; }
     .scroll-thin::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 999px; }
@@ -191,14 +193,14 @@
             <p class="text-xs text-slate-500 mb-4">Laporkan barang hilang atau ditemukan.</p>
             <form id="lf-form" class="space-y-3">
               <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Jenis</label>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Tipe</label>
                 <select id="lf-type" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm">
                   <option value="lost">Hilang</option>
                   <option value="found">Ditemukan</option>
                 </select>
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Judul Barang</label>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Barang yang Hilang</label>
                 <input id="lf-title" required maxlength="80" placeholder="Contoh: Dompet hitam" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400" />
               </div>
               <div>
@@ -206,11 +208,11 @@
                 <input id="lf-location" required maxlength="80" placeholder="Contoh: Gedung T3.3" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400" />
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Deskripsi</label>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Deskripsi Barang</label>
                 <textarea id="lf-desc" required rows="3" maxlength="400" placeholder="Ciri-ciri barang" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400 resize-y"></textarea>
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Kontak (No WA)</label>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Kontak</label>
                 <input id="lf-contact" required maxlength="60" placeholder="08123456789" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400" />
               </div>
               <!-- FITUR UNGGAN FOTO -->
@@ -278,16 +280,17 @@
                   <input id="nb-date" type="date" required class="input-dark w-full rounded-xl px-3 py-2.5 text-sm" />
                 </div>
                 <div>
-                  <label class="block text-xs font-semibold text-slate-600 mb-1">Jam</label>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Menunggu sampai jam</label>
                   <input id="nb-time" type="time" required class="input-dark w-full rounded-xl px-3 py-2.5 text-sm" />
                 </div>
               </div>
+              <p class="text-[11px] text-slate-500">⏳ Postingan otomatis kadaluarsa & diarsipkan begitu jam ini lewat.</p>
               <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Kursi / Catatan</label>
-                <input id="nb-note" maxlength="120" placeholder="Contoh: 2 kursi, lewat tol" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400" />
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Catatan</label>
+                <input id="nb-note" maxlength="120" placeholder="Contoh: didepan warmindo" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400" />
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Kontak (No WA)</label>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Kontaks</label>
                 <input id="nb-contact" required maxlength="60" placeholder="08123456789" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400" />
               </div>
               <button type="submit" id="nb-submit-btn" class="w-full rounded-xl py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/20 transition">
@@ -319,62 +322,111 @@
       <!-- ========== ADMIN PANEL ========== -->
       <section id="panel-admin" class="hidden fade-in">
         <div class="space-y-5">
-          <!-- Statistik -->
+          <!-- Widget Analitik -->
           <div class="glass rounded-2xl p-5 glow-cyan">
             <h2 class="text-lg font-bold text-slate-900 mb-1">Dasbor Admin</h2>
-            <p class="text-xs text-slate-500 mb-4">Kelola dan moderasi semua postingan di KampusFind.</p>
-            <div class="grid grid-cols-2 gap-3 max-w-md">
-              <div class="rounded-2xl p-4 bg-white border border-slate-200">
-                <p class="text-[11px] font-semibold text-slate-500">Total Lost &amp; Found</p>
-                <p id="admin-total-lf" class="text-3xl font-extrabold text-blue-600 mt-1">0</p>
+            <p class="text-xs text-slate-500 mb-4">Kelola pengguna dan moderasi semua postingan di KampusFind.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div class="rounded-2xl p-4 bg-white border border-slate-200 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-base shrink-0">👥</div>
+                <div class="min-w-0">
+                  <p class="text-[11px] font-semibold text-slate-500">Total Pengguna Terdaftar</p>
+                  <p id="admin-total-users" class="text-2xl font-extrabold text-blue-600 mt-0.5">0</p>
+                </div>
               </div>
-              <div class="rounded-2xl p-4 bg-white border border-slate-200">
-                <p class="text-[11px] font-semibold text-slate-500">Total Nebeng</p>
-                <p id="admin-total-nb" class="text-3xl font-extrabold text-emerald-600 mt-1">0</p>
+              <div class="rounded-2xl p-4 bg-white border border-slate-200 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center text-base shrink-0">📦</div>
+                <div class="min-w-0">
+                  <p class="text-[11px] font-semibold text-slate-500">Total Lost &amp; Found</p>
+                  <p id="admin-total-lf" class="text-2xl font-extrabold text-blue-600 mt-0.5">0</p>
+                </div>
+              </div>
+              <div class="rounded-2xl p-4 bg-white border border-slate-200 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-base shrink-0">🚗</div>
+                <div class="min-w-0">
+                  <p class="text-[11px] font-semibold text-slate-500">Total Postingan Nebeng</p>
+                  <p id="admin-total-nb" class="text-2xl font-extrabold text-emerald-600 mt-0.5">0</p>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Tabel Lost & Found -->
-          <div class="glass rounded-2xl p-5">
-            <h3 class="font-bold text-slate-900 mb-3">Semua Postingan Lost &amp; Found</h3>
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs">
-                <thead>
-                  <tr class="text-slate-500 border-b border-slate-200">
-                    <th class="py-2 pr-3">Judul</th>
-                    <th class="py-2 pr-3">Jenis</th>
-                    <th class="py-2 pr-3">Lokasi</th>
-                    <th class="py-2 pr-3">Oleh</th>
-                    <th class="py-2 pr-3">Tanggal</th>
-                    <th class="py-2 text-right">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody id="admin-lf-rows"></tbody>
-              </table>
-              <p id="admin-lf-empty" class="hidden text-center py-8 text-slate-500 text-xs">Belum ada data Lost &amp; Found.</p>
+          <!-- Sub Navigasi Admin -->
+          <div class="flex gap-2 p-1 rounded-2xl bg-slate-200/60 border border-slate-300/50">
+            <button id="admin-tab-posts" class="tab-btn tab-active flex-1 rounded-xl px-3 py-2.5 text-xs font-bold border border-transparent transition">
+              Postingan / Archive
+            </button>
+            <button id="admin-tab-users" class="tab-btn flex-1 rounded-xl px-3 py-2.5 text-xs font-bold border border-transparent text-slate-600 hover:text-slate-900 transition">
+              Manajemen Pengguna
+            </button>
+          </div>
+
+          <!-- Sub Panel: Postingan -->
+          <div id="admin-panel-posts" class="space-y-5">
+            <!-- Tabel Lost & Found -->
+            <div class="glass rounded-2xl p-5">
+              <h3 class="font-bold text-slate-900 mb-3">Semua Postingan Lost &amp; Found</h3>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead>
+                    <tr class="text-slate-500 border-b border-slate-200">
+                      <th class="py-2 pr-3">Judul</th>
+                      <th class="py-2 pr-3">Jenis</th>
+                      <th class="py-2 pr-3">Lokasi</th>
+                      <th class="py-2 pr-3">Oleh</th>
+                      <th class="py-2 pr-3">Tanggal</th>
+                      <th class="py-2 text-right">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-lf-rows"></tbody>
+                </table>
+                <p id="admin-lf-empty" class="hidden text-center py-8 text-slate-500 text-xs">Belum ada data Lost &amp; Found.</p>
+              </div>
+            </div>
+
+            <!-- Tabel Nebeng -->
+            <div class="glass rounded-2xl p-5">
+              <h3 class="font-bold text-slate-900 mb-3">Semua Postingan Nebeng</h3>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead>
+                    <tr class="text-slate-500 border-b border-slate-200">
+                      <th class="py-2 pr-3">Rute</th>
+                      <th class="py-2 pr-3">Tipe</th>
+                      <th class="py-2 pr-3">Tanggal</th>
+                      <th class="py-2 pr-3">Oleh</th>
+                      <th class="py-2 pr-3">Kontak</th>
+                      <th class="py-2 pr-3">Status</th>
+                      <th class="py-2 text-right">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-nb-rows"></tbody>
+                </table>
+                <p id="admin-nb-empty" class="hidden text-center py-8 text-slate-500 text-xs">Belum ada data Nebeng.</p>
+              </div>
             </div>
           </div>
 
-          <!-- Tabel Nebeng -->
-          <div class="glass rounded-2xl p-5">
-            <h3 class="font-bold text-slate-900 mb-3">Semua Postingan Nebeng</h3>
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs">
-                <thead>
-                  <tr class="text-slate-500 border-b border-slate-200">
-                    <th class="py-2 pr-3">Rute</th>
-                    <th class="py-2 pr-3">Tipe</th>
-                    <th class="py-2 pr-3">Tanggal</th>
-                    <th class="py-2 pr-3">Oleh</th>
-                    <th class="py-2 pr-3">Kontak</th>
-                    <th class="py-2 pr-3">Status</th>
-                    <th class="py-2 text-right">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody id="admin-nb-rows"></tbody>
-              </table>
-              <p id="admin-nb-empty" class="hidden text-center py-8 text-slate-500 text-xs">Belum ada data Nebeng.</p>
+          <!-- Sub Panel: Manajemen Pengguna -->
+          <div id="admin-panel-users" class="hidden">
+            <div class="glass rounded-2xl p-5">
+              <h3 class="font-bold text-slate-900 mb-3">Manajemen Pengguna</h3>
+              <p class="text-xs text-slate-500 mb-4">Suspend / aktifkan akun pengguna. Pengguna yang disuspend akan otomatis logout saat sesi berikutnya.</p>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead>
+                    <tr class="text-slate-500 border-b border-slate-200">
+                      <th class="py-2 pr-3">Nama</th>
+                      <th class="py-2 pr-3">Email</th>
+                      <th class="py-2 pr-3">Role</th>
+                      <th class="py-2 pr-3">Status</th>
+                      <th class="py-2 text-right">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-users-rows"></tbody>
+                </table>
+                <p id="admin-users-empty" class="hidden text-center py-8 text-slate-500 text-xs">Belum ada data pengguna.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -382,7 +434,7 @@
     </main>
 
     <footer class="border-t border-slate-200 py-4 text-center text-[11px] text-slate-400">
-      KampusFind · Fidelia Ping + Ilham Risanjaya
+      KampusFind · Lost & Found + Nebeng Bareng
     </footer>
   </div>
 
@@ -465,6 +517,11 @@
           </div>
         </div>
         <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Email Kampus</label>
+          <input id="edit-prof-email" type="email" required placeholder="nama@kampus.ac.id" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400" />
+          <p class="text-[10px] text-slate-400 mt-1">Perubahan email akan memicu email konfirmasi ke alamat baru.</p>
+        </div>
+        <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Nomor WhatsApp</label>
           <input id="edit-prof-phone" type="text" placeholder="08123456789" class="input-dark w-full rounded-xl px-3 py-2.5 text-sm placeholder:text-slate-400" />
         </div>
@@ -492,7 +549,7 @@
       </div>
       <div>
         <h3 class="text-lg font-bold text-slate-900">Anda Yakin?</h3>
-        <p id="delete-modal-msg" class="text-xs text-slate-500 mt-1">Postingan akan dihapus secara permanen.</p>
+        <p id="delete-modal-msg" class="text-xs text-slate-500 mt-1">Postingan akan diarsipkan dan disembunyikan dari feed.</p>
       </div>
       <div class="flex gap-3 pt-2">
         <button id="modal-cancel-btn" class="flex-1 rounded-xl py-2.5 text-xs font-bold border border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
@@ -563,9 +620,11 @@
     let currentUser = null;
     let lfPosts = [];
     let nbPosts = [];
+    let adminUsers = [];
     let lfChannel = null;
     let nbChannel = null;
     let currentProfileData = null;
+    let archiveTimer = null;
 
     // Delete Target
     let deleteTargetId = null;
@@ -742,6 +801,7 @@
       document.getElementById('edit-prof-prodi').value = currentProfileData.prodi !== 'Belum diisi' ? currentProfileData.prodi : '';
       document.getElementById('edit-prof-angkatan').value = currentProfileData.angkatan !== 'Belum diisi' ? currentProfileData.angkatan : '';
       document.getElementById('edit-prof-phone').value = currentProfileData.phone || '';
+      document.getElementById('edit-prof-email').value = currentUser ? currentUser.email : '';
       document.getElementById('edit-prof-bio').value = currentProfileData.bio !== 'Belum ada bio.' ? currentProfileData.bio : '';
     };
 
@@ -750,6 +810,25 @@
       document.getElementById('profile-view-mode').classList.remove('hidden');
     };
 
+    // ---------- Update Email Autentikasi ----------
+    async function updateAuthEmail(newEmail) {
+      if (!currentUser || !supabaseClient) return { changed: false };
+      if (!newEmail || newEmail === currentUser.email) return { changed: false };
+
+      const { data, error } = await supabaseClient.auth.updateUser({ email: newEmail });
+      if (error) throw error;
+
+      const effectiveEmail = (data && (data.user && (data.user.new_email || data.user.email))) || newEmail;
+
+      const { error: dbError } = await supabaseClient
+        .from('users')
+        .update({ email: effectiveEmail })
+        .eq('id', currentUser.uid);
+      if (dbError) throw dbError;
+
+      return { changed: true, pending: Boolean(data && data.user && data.user.new_email), email: effectiveEmail };
+    }
+
     document.getElementById('profile-edit-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!currentUser || !supabaseClient) return;
@@ -757,19 +836,27 @@
       const btnSave = document.getElementById('btn-save-profile');
       btnSave.disabled = true;
 
-      const updatedPayload = {
-        id: currentUser.uid,
-        full_name: document.getElementById('edit-prof-name').value.trim(),
-        nim: document.getElementById('edit-prof-nim').value.trim() || 'Belum diisi',
-        email: currentUser.email,
-        prodi: document.getElementById('edit-prof-prodi').value.trim() || 'Belum diisi',
-        angkatan: document.getElementById('edit-prof-angkatan').value.trim() || 'Belum diisi',
-        phone: document.getElementById('edit-prof-phone').value.trim(),
-        bio: document.getElementById('edit-prof-bio').value.trim() || 'Belum ada bio.',
-        updated_at: new Date().toISOString()
-      };
+      const newEmail = document.getElementById('edit-prof-email').value.trim();
 
       try {
+        let emailResult = { changed: false };
+        if (newEmail && newEmail !== currentUser.email) {
+          emailResult = await updateAuthEmail(newEmail);
+          currentUser.email = emailResult.email || newEmail;
+        }
+
+        const updatedPayload = {
+          id: currentUser.uid,
+          full_name: document.getElementById('edit-prof-name').value.trim(),
+          nim: document.getElementById('edit-prof-nim').value.trim() || 'Belum diisi',
+          email: currentUser.email,
+          prodi: document.getElementById('edit-prof-prodi').value.trim() || 'Belum diisi',
+          angkatan: document.getElementById('edit-prof-angkatan').value.trim() || 'Belum diisi',
+          phone: document.getElementById('edit-prof-phone').value.trim(),
+          bio: document.getElementById('edit-prof-bio').value.trim() || 'Belum ada bio.',
+          updated_at: new Date().toISOString()
+        };
+
         const { error } = await supabaseClient.from('profiles').upsert(updatedPayload);
         if (error) throw error;
 
@@ -779,7 +866,13 @@
         navUsername.textContent = currentUser.name;
         document.getElementById('nav-avatar-initial').textContent = currentUser.name.charAt(0).toUpperCase();
 
-        showToast('Profil berhasil diperbarui!');
+        if (emailResult.changed && emailResult.pending) {
+          showToast('Profil tersimpan. Konfirmasi email baru lewat link yang dikirim ke inbox Anda.');
+        } else if (emailResult.changed) {
+          showToast('Profil & email berhasil diperbarui!');
+        } else {
+          showToast('Profil berhasil diperbarui!');
+        }
         closeProfileModal();
       } catch (err) {
         showToast('Gagal simpan profil: ' + err.message, true);
@@ -813,20 +906,25 @@
       closeDeleteModal();
 
       try {
-        const { error } = await supabaseClient.from(type).delete().eq('id', id);
+        const { error } = await supabaseClient
+          .from(type)
+          .update({ is_archived: true })
+          .eq('id', id);
         if (error) throw error;
 
         if (type === 'lostfound') {
-          lfPosts = lfPosts.filter(p => p.id !== id);
+          lfPosts = lfPosts.map(p => p.id === id ? { ...p, is_archived: true } : p);
           renderLF();
+          renderAdminDashboard();
         } else {
-          nbPosts = nbPosts.filter(p => p.id !== id);
+          nbPosts = nbPosts.map(p => p.id === id ? { ...p, is_archived: true } : p);
           renderNB();
+          renderAdminDashboard();
         }
 
-        showToast('Postingan berhasil dihapus!');
+        showToast('Postingan berhasil diarsipkan.');
       } catch (err) {
-        showToast('Gagal menghapus: ' + err.message, true);
+        showToast('Gagal mengarsipkan: ' + err.message, true);
       }
     });
 
@@ -877,10 +975,16 @@
           } catch (e) {
             console.warn('Gagal simpan ke tabel users:', e.message);
           }
+
+          // Hapus sesi yang dibuat otomatis oleh Supabase
+          await supabaseClient.auth.signOut();
         }
 
-        showToast('Pendaftaran berhasil! Silakan login.');
+        // Reset form & kembali ke form login
+        e.target.reset();
         document.getElementById('to-login').click();
+
+        showToast('Pendaftaran berhasil! Silakan login untuk melanjutkan.');
       } catch (err) {
         setAuthError(mapAuthError(err));
       } finally {
@@ -951,17 +1055,24 @@
 
         if (supabaseClient) {
           try {
-            const { data: roleRow } = await supabaseClient
+            const { data: userRow } = await supabaseClient
               .from('users')
-              .select('role')
+              .select('role, is_active')
               .eq('id', session.user.id)
               .maybeSingle();
-            if (roleRow && roleRow.role) {
-              currentUser.role = roleRow.role;
+            if (userRow) {
+              if (userRow.role) currentUser.role = userRow.role;
+              currentUser.is_active = userRow.is_active;
             }
           } catch (e) {
             console.warn('Gagal memuat role pengguna:', e);
           }
+        }
+
+        if (currentUser.is_active === false) {
+          showToast('Akun Anda telah disuspend oleh Admin.', true);
+          try { await supabaseClient.auth.signOut(); } catch (e) { console.warn(e); }
+          return;
         }
 
         navUsername.textContent = currentUser.name;
@@ -1012,6 +1123,31 @@
     tabAdmin.addEventListener('click', () => {
       activateTab(tabAdmin, panelAdmin);
       renderAdminDashboard();
+      adminFetchUsers();
+    });
+
+    // ---------- Sub Tabs Admin ----------
+    const adminTabPosts = document.getElementById('admin-tab-posts');
+    const adminTabUsers = document.getElementById('admin-tab-users');
+    const adminPanelPosts = document.getElementById('admin-panel-posts');
+    const adminPanelUsers = document.getElementById('admin-panel-users');
+
+    function activateAdminSubTab(tab, panel) {
+      [adminTabPosts, adminTabUsers].forEach(t => {
+        t.classList.remove('tab-active');
+        t.classList.add('text-slate-600');
+      });
+      [adminPanelPosts, adminPanelUsers].forEach(p => p.classList.add('hidden'));
+      tab.classList.add('tab-active');
+      tab.classList.remove('text-slate-600');
+      panel.classList.remove('hidden');
+    }
+
+    adminTabPosts.addEventListener('click', () => activateAdminSubTab(adminTabPosts, adminPanelPosts));
+
+    adminTabUsers.addEventListener('click', () => {
+      activateAdminSubTab(adminTabUsers, adminPanelUsers);
+      adminFetchUsers();
     });
 
     // ---------- Admin Panel ----------
@@ -1026,11 +1162,82 @@
 
     function renderAdminDashboard() {
       if (!currentUser || currentUser.role !== 'admin') return;
+      document.getElementById('admin-total-users').textContent = adminUsers.length;
       document.getElementById('admin-total-lf').textContent = lfPosts.length;
       document.getElementById('admin-total-nb').textContent = nbPosts.length;
       renderAdminLF();
       renderAdminNB();
     }
+
+    // ---------- Manajemen Pengguna ----------
+    async function adminFetchUsers() {
+      if (!supabaseClient) return;
+      const { data, error } = await supabaseClient
+        .from('users')
+        .select('*')
+        .order('email', { ascending: true });
+      if (error) { console.error('Users Fetch error:', error.message); return; }
+      adminUsers = data || [];
+      renderAdminUsers();
+      renderAdminDashboard();
+    }
+
+    function renderAdminUsers() {
+      const tbody = document.getElementById('admin-users-rows');
+      const empty = document.getElementById('admin-users-empty');
+      if (!tbody || !empty) return;
+
+      if (adminUsers.length === 0) {
+        tbody.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      tbody.innerHTML = adminUsers.map(u => {
+        const isActive = u.is_active !== false;
+        const isAdmin = u.role === 'admin';
+        const isSelf = currentUser && u.id === currentUser.uid;
+
+        const actionHtml = isSelf
+          ? '<span class="text-[10px] text-slate-400 font-semibold">Anda</span>'
+          : isActive
+            ? `<button onclick="adminToggleUserStatus('${u.id}', true)" class="text-red-500 hover:text-red-700 font-bold">Suspend</button>`
+            : `<button onclick="adminToggleUserStatus('${u.id}', false)" class="text-emerald-600 hover:text-emerald-700 font-bold">Aktifkan</button>`;
+
+        return `
+          <tr class="border-b border-slate-200">
+            <td class="py-2 pr-3 text-slate-900 font-semibold">${escapeHtml(u.name || 'Tanpa Nama')}</td>
+            <td class="py-2 pr-3 text-slate-600 font-mono">${escapeHtml(u.email || '-')}</td>
+            <td class="py-2 pr-3">
+              <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold ${isAdmin ? 'badge-nebeng' : 'bg-slate-100 text-slate-600 border border-slate-200'}">${isAdmin ? 'Admin' : 'User'}</span>
+            </td>
+            <td class="py-2 pr-3">
+              <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold ${isActive ? 'badge-open' : 'badge-archived'}">${isActive ? 'Aktif' : 'Banned'}</span>
+            </td>
+            <td class="py-2 text-right">${actionHtml}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    window.adminToggleUserStatus = async function(uid, currentStatus) {
+      if (!supabaseClient) return;
+      const nextStatus = !currentStatus;
+      try {
+        const { error } = await supabaseClient
+          .from('users')
+          .update({ is_active: nextStatus })
+          .eq('id', uid);
+        if (error) throw error;
+
+        adminUsers = adminUsers.map(u => u.id === uid ? { ...u, is_active: nextStatus } : u);
+        renderAdminUsers();
+        showToast(nextStatus ? 'Pengguna diaktifkan kembali.' : 'Pengguna telah di-suspend.');
+      } catch (err) {
+        showToast('Gagal mengubah status pengguna: ' + err.message, true);
+      }
+    };
 
     function renderAdminLF() {
       const tbody = document.getElementById('admin-lf-rows');
@@ -1043,7 +1250,10 @@
       empty.classList.add('hidden');
       tbody.innerHTML = lfPosts.map(p => `
         <tr class="border-b border-slate-200">
-          <td class="py-2 pr-3 text-slate-900 font-semibold">${escapeHtml(p.title)}</td>
+          <td class="py-2 pr-3 text-slate-900 font-semibold">
+            ${escapeHtml(p.title)}
+            ${isPostArchived(p) ? '<span class="ml-1.5 px-2 py-0.5 rounded-lg text-[10px] font-bold badge-archived">Archived</span>' : ''}
+          </td>
           <td class="py-2 pr-3">
             <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold ${p.type === 'lost' ? 'badge-lost' : 'badge-found'}">${p.type === 'lost' ? 'Hilang' : 'Ditemukan'}</span>
           </td>
@@ -1051,7 +1261,7 @@
           <td class="py-2 pr-3 text-slate-600">${escapeHtml(p.user_name || 'Anonim')}</td>
           <td class="py-2 pr-3 text-slate-500">${formatTime(p.created_at)}</td>
           <td class="py-2 text-right">
-            <button onclick="promptDelete('${p.id}', 'lostfound', 'Hapus permanen postingan Lost & Found ini?')" class="text-red-500 hover:text-red-600 font-bold">Hapus Permanen</button>
+            <button onclick="promptDelete('${p.id}', 'lostfound', 'Arsipkan postingan Lost & Found ini? Data tetap tersimpan untuk riwayat admin.')" class="text-red-500 hover:text-red-600 font-bold">${isPostArchived(p) ? 'Arsipkan Lagi' : 'Arsipkan'}</button>
           </td>
         </tr>
       `).join('');
@@ -1076,10 +1286,14 @@
           <td class="py-2 pr-3 text-slate-600">${escapeHtml(p.user_name || 'Anonim')}</td>
           <td class="py-2 pr-3 text-slate-600">${escapeHtml(p.contact)}</td>
           <td class="py-2 pr-3">
-            <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold ${p.status === 'full' ? 'badge-full' : 'badge-open'}">${p.status === 'full' ? 'Penuh' : 'Tersedia'}</span>
+            <div class="flex flex-wrap gap-1">
+              <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold ${p.status === 'full' ? 'badge-full' : 'badge-open'}">${p.status === 'full' ? 'Penuh' : 'Tersedia'}</span>
+              ${isPostArchived(p) ? '<span class="px-2 py-0.5 rounded-lg text-[10px] font-bold badge-archived">Archived</span>' : ''}
+              ${!isPostArchived(p) && isNebengExpired(p) ? '<span class="px-2 py-0.5 rounded-lg text-[10px] font-bold badge-expired">Expired</span>' : ''}
+            </div>
           </td>
           <td class="py-2 text-right">
-            <button onclick="promptDelete('${p.id}', 'nebeng', 'Hapus permanen postingan Nebeng ini?')" class="text-red-500 hover:text-red-600 font-bold">Hapus Permanen</button>
+            <button onclick="promptDelete('${p.id}', 'nebeng', 'Arsipkan postingan Nebeng ini? Data tetap tersimpan untuk riwayat admin.')" class="text-red-500 hover:text-red-600 font-bold">${isPostArchived(p) ? 'Arsipkan Lagi' : 'Arsipkan'}</button>
           </td>
         </tr>
       `).join('');
@@ -1090,6 +1304,8 @@
     // ============================================================
     async function teardownRealtime() {
       if (!supabaseClient) return;
+      clearInterval(archiveTimer);
+      archiveTimer = null;
       if (lfChannel) await supabaseClient.removeChannel(lfChannel);
       if (nbChannel) await supabaseClient.removeChannel(nbChannel);
       lfChannel = null;
@@ -1105,6 +1321,13 @@
 
       subscribeLF();
       subscribeNB();
+
+      // Auto-arsip postingan nebeng yang kadaluarsa (setiap menit).
+      clearInterval(archiveTimer);
+      archiveTimer = setInterval(() => {
+        autoArchiveExpiredNebeng();
+        renderNB();
+      }, 60000);
     }
 
     // ---------- Lost & Found Data ----------
@@ -1248,6 +1471,7 @@
       const empty = document.getElementById('lf-empty');
 
       const filtered = lfPosts.filter(p => {
+        if (p.is_archived === true) return false;
         const matchFilter = filter === 'all' || p.type === filter;
         const matchSearch = (p.title || '').toLowerCase().includes(search) ||
                             (p.location || '').toLowerCase().includes(search) ||
@@ -1291,7 +1515,7 @@
                 <a href="${formatWAUrl(p.contact)}" target="_blank" rel="noopener noreferrer" class="text-blue-600 font-semibold hover:underline">
                   📞 ${escapeHtml(p.contact)}
                 </a>
-                ${isOwner ? `<button data-action="delete-post" data-postid="${p.id}" class="text-red-500 hover:text-red-600 font-bold ml-2">Hapus</button>` : ''}
+                ${isOwner ? `<button data-action="delete-post" data-postid="${p.id}" class="text-red-500 hover:text-red-600 font-bold ml-2">Arsipkan</button>` : ''}
               </div>
             </div>
           </div>
@@ -1325,12 +1549,23 @@
       const submitBtn = document.getElementById('nb-submit-btn');
       submitBtn.disabled = true;
 
+      const date = document.getElementById('nb-date').value;
+      const time = document.getElementById('nb-time').value;
+      const expiredAt = new Date(`${date}T${time}:00`);
+
+      if (isNaN(expiredAt.getTime()) || expiredAt.getTime() <= Date.now()) {
+        showToast('Waktu menunggu sudah lewat. Pilih tanggal/jam yang masih akan datang.', true);
+        submitBtn.disabled = false;
+        return;
+      }
+
       const payload = {
         type: document.getElementById('nb-type').value,
         from: document.getElementById('nb-from').value.trim(),
         to: document.getElementById('nb-to').value.trim(),
-        date: document.getElementById('nb-date').value,
-        time: document.getElementById('nb-time').value,
+        date,
+        time,
+        expired_at: expiredAt.toISOString(),
         note: document.getElementById('nb-note').value.trim(),
         contact: document.getElementById('nb-contact').value.trim(),
         maps_link: document.getElementById('nb-maps').value.trim() || null,
@@ -1366,6 +1601,61 @@
       return null;
     }
 
+    function getNebengExpiry(p) {
+      if (p && p.expired_at) {
+        const d = new Date(p.expired_at);
+        if (!isNaN(d.getTime())) return d;
+      }
+      if (!p || !p.date || !p.time) return null;
+      const d = new Date(`${p.date}T${p.time}:00`);
+      return isNaN(d.getTime()) ? null : d;
+    }
+
+    function isNebengExpired(p) {
+      const exp = getNebengExpiry(p);
+      return !!exp && exp.getTime() < Date.now();
+    }
+
+    function remainingInfo(p) {
+      const exp = getNebengExpiry(p);
+      if (!exp) return { text: '', cls: '' };
+      const diff = exp.getTime() - Date.now();
+      if (diff <= 0) return { text: 'Kadaluarsa', cls: 'text-red-500' };
+      const totalMin = Math.floor(diff / 60000);
+      const text = totalMin < 60
+        ? `${totalMin} menit lagi`
+        : `${Math.floor(totalMin / 60)} jam ${totalMin % 60} menit lagi`;
+      const cls = totalMin <= 30 ? 'text-amber-600' : 'text-slate-400';
+      return { text, cls };
+    }
+
+    async function autoArchiveExpiredNebeng() {
+      if (!supabaseClient) return;
+      const expired = nbPosts.filter(p => !isPostArchived(p) && isNebengExpired(p));
+      if (expired.length === 0) return;
+      for (const p of expired) {
+        try {
+          const { error } = await supabaseClient
+            .from('nebeng')
+            .update({ is_archived: true })
+            .eq('id', p.id);
+          if (error) {
+            console.error('Auto-archive gagal:', error.message);
+            continue;
+          }
+          nbPosts = nbPosts.map(x => x.id === p.id ? { ...x, is_archived: true } : x);
+        } catch (err) {
+          console.error('Auto-archive gagal:', err.message);
+        }
+      }
+      renderNB();
+      renderAdminDashboard();
+    }
+
+    function isPostArchived(p) {
+      return Boolean(p && p.is_archived === true);
+    }
+
     async function setNebengStatus(id, status) {
       if (!supabaseClient) return;
       try {
@@ -1390,6 +1680,8 @@
       const empty = document.getElementById('nb-empty');
 
       const filtered = nbPosts.filter(p => {
+        if (isPostArchived(p)) return false;
+        if (isNebengExpired(p)) return false;
         const matchFilter = filter === 'all' || p.type === filter;
         const matchSearch = (p.from || '').toLowerCase().includes(search) ||
                             (p.to || '').toLowerCase().includes(search) ||
@@ -1448,7 +1740,7 @@
                   ${isFull
                     ? `<button data-action="set-status" data-postid="${p.id}" data-status="open" class="text-emerald-600 hover:text-emerald-700 font-bold">Tandai Tersedia</button>`
                     : `<button data-action="set-status" data-postid="${p.id}" data-status="full" class="text-amber-600 hover:text-amber-700 font-bold">Tandai Penuh</button>`}
-                  <button data-action="delete-post" data-postid="${p.id}" class="text-red-500 hover:text-red-600 font-bold ml-2">Hapus</button>
+                  <button data-action="delete-post" data-postid="${p.id}" class="text-red-500 hover:text-red-600 font-bold ml-2">Arsipkan</button>
                 ` : ''}
               </div>
             </div>
