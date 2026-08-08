@@ -1261,7 +1261,7 @@
           <td class="py-2 pr-3 text-slate-600">${escapeHtml(p.user_name || 'Anonim')}</td>
           <td class="py-2 pr-3 text-slate-500">${formatTime(p.created_at)}</td>
           <td class="py-2 text-right">
-            <button onclick="promptDelete('${p.id}', 'lostfound', 'Arsipkan postingan Lost & Found ini? Data tetap tersimpan untuk riwayat admin.')" class="text-red-500 hover:text-red-600 font-bold">${isPostArchived(p) ? 'Arsipkan Lagi' : 'Arsipkan'}</button>
+            <button onclick="promptDelete('${p.id}', 'lostfound', 'Arsipkan postingan Lost & Found ini? Data tetap tersimpan untuk riwayat admin.')" class="text-red-500 hover:text-red-600 font-bold">Arsipkan</button>
           </td>
         </tr>
       `).join('');
@@ -1293,7 +1293,7 @@
             </div>
           </td>
           <td class="py-2 text-right">
-            <button onclick="promptDelete('${p.id}', 'nebeng', 'Arsipkan postingan Nebeng ini? Data tetap tersimpan untuk riwayat admin.')" class="text-red-500 hover:text-red-600 font-bold">${isPostArchived(p) ? 'Arsipkan Lagi' : 'Arsipkan'}</button>
+            <button onclick="promptDelete('${p.id}', 'nebeng', 'Arsipkan postingan Nebeng ini? Data tetap tersimpan untuk riwayat admin.')" class="text-red-500 hover:text-red-600 font-bold">Arsipkan</button>
           </td>
         </tr>
       `).join('');
@@ -1515,7 +1515,7 @@
                 <a href="${formatWAUrl(p.contact)}" target="_blank" rel="noopener noreferrer" class="text-blue-600 font-semibold hover:underline">
                   📞 ${escapeHtml(p.contact)}
                 </a>
-                ${isOwner ? `<button data-action="delete-post" data-postid="${p.id}" class="text-red-500 hover:text-red-600 font-bold ml-2">Arsipkan</button>` : ''}
+                ${isOwner ? `<button data-action="delete-post" data-postid="${p.id}" class="text-red-500 hover:text-red-600 font-bold ml-2">Hapus</button>` : ''}
               </div>
             </div>
           </div>
